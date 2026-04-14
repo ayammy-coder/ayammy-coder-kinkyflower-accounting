@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="花会計">
+<title>KINKYFLOWER STAND 会計</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
+:root{
+  --pink:#FF0080;--pink2:#FF4DB2;--pink3:#FFE0F3;
+  --green:var(--pink);--green2:var(--pink2);--green3:var(--pink3);
+  --accent:#111;--accent2:#f0f0f0;
+  --bg:#f0f0f0;--card:#fff;
+  --text:#111;--sub:#777;--border:#d8d8d8;
+  --inc:var(--pink);--exp:#111;
+  --nav:64px;--hdr:54px;
+}
+html,body{height:100%;font-family:-apple-system,'Hiragino Sans','Yu Gothic UI',sans-serif;background:var(--bg);color:var(--text);overflow:hidden}
+/* ── Header ── */
+.hdr{position:fixed;top:0;left:0;right:0;height:var(--hdr);background:var(--pink);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 16px;z-index:100}
+.hdr-center{text-align:center}
+.hdr-title{font-size:15px;font-weight:900;letter-spacing:2.5px;color:#fff}
+.hdr-sub{font-size:10px;opacity:.75;margin-top:1px;letter-spacing:.8px;color:#fff}
+.hdr-btn{background:none;border:none;color:#fff;font-size:20px;cursor:pointer;padding:6px}
+/* ── Main ── */
+.main{position:fixed;top:var(--hdr);bottom:var(--nav);left:0;right:0;overflow-y:auto;-webkit-overflow-scrolling:touch}
+/* ── Bottom Nav ── */
+.bnav{position:fixed;bottom:0;left:0;right:0;height:var(--nav);background:#000;border-top:2px solid var(--pink);display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom,0px)}
+.nitem{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:#555;font-size:10px;font-weight:600;cursor:pointer;transition:color .15s;letter-spacing:.2px}
+.nitem.on{color:var(--pink)}
+.nitem svg{width:22px;height:22px;stroke-width:1.8}
+/* ── Panels ── */
+.panel{display:none;padding:14px 14px 8px;min-height:100%}
+.panel.on{display:block}
+/* ── Cards ── */
+.card{background:var(--card);border-radius:14px;padding:14px;margin-bottom:12px;box-shadow:0 1px 6px rgba(0,0,0,.1)}
+.ctitle{font-size:11px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px}
+/* ── Month nav ── */
+.mnav{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.mnav-btn{width:34px;height:34px;border-radius:8px;border:1.5px solid var(--border);background:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text)}
+.mdisp{font-size:16px;font-weight:800}
+/* ── Summary grid ── */
+.sgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.sc{background:var(--card);border-radius:14px;padding:14px;box-shadow:0 1px 6px rgba(0,0,0,.1)}
+.sc-lbl{font-size:11px;color:var(--sub);margin-bottom:4px}
+.sc-val{font-size:20px;font-weight:800}
+.sc-val.i{color:var(--pink)}
+.sc-val.e{color:#111}
+.sc-val.p{color:var(--pink)}
+.pbar{height:7px;background:var(--bg);border-radius:4px;overflow:hidden;margin-top:6px}
+.pbar-f{height:100%;border-radius:4px;transition:width .6s}
+/* ── Chart ── */
+.ch-wrap{position:relative;height:190px}
+/* ── Transactions ── */
+.txitem{display:flex;align-items:center;padding:11px 0;border-bottom:1px solid var(--border);gap:10px}
+.txitem:last-child{border-bottom:none}
+.txico{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.txico.sq{background:var(--pink3)}
+.txico.nk{background:#e8e8e8}
+.txico.bk{background:#d8d8d8}
+.txico.pc{background:#ebebeb}
+.txico.mf{background:var(--pink3);font-size:11px;font-weight:900;color:var(--pink)}
+.txinfo{flex:1;min-width:0}
+.txdesc{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.txmeta{font-size:11px;color:var(--sub);margin-top:2px}
+.txamt{font-size:14px;font-weight:800;white-space:nowrap}
+.txamt.p{color:var(--pink)}
+.txamt.n{color:#111}
+.txdel{font-size:17px;cursor:pointer;opacity:.3;padding:4px;color:#111;flex-shrink:0}
+/* ── Filter bar ── */
+.fbar{display:flex;gap:7px;overflow-x:auto;padding-bottom:4px;margin-bottom:10px;-webkit-overflow-scrolling:touch}
+.fbar::-webkit-scrollbar{display:none}
+.fchip{padding:5px 12px;border-radius:20px;border:1.5px solid var(--border);background:#fff;font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;color:var(--sub);transition:all .15s}
+.fchip.on{background:var(--pink);border-color:var(--pink);color:#fff}
+/* ── Sub tabs ── */
+.stabs{display:flex;background:var(--bg);border-radius:10px;padding:3px;gap:3px;margin-bottom:14px}
+.stab{flex:1;padding:8px;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;color:var(--sub);background:transparent;transition:all .15s}
+.stab.on{background:#fff;color:var(--pink);box-shadow:0 1px 3px rgba(0,0,0,.12);font-weight:800}
+/* ── Forms ── */
+.fg{margin-bottom:13px}
+.flbl{display:block;font-size:13px;font-weight:600;margin-bottom:5px}
+.finput,.fsel{width:100%;padding:12px 13px;border:1.5px solid var(--border);border-radius:10px;font-size:16px;font-family:inherit;background:#fff;color:var(--text);-webkit-appearance:none;appearance:none;outline:none;transition:border-color .15s}
+.finput:focus,.fsel:focus{border-color:var(--pink);box-shadow:0 0 0 3px rgba(255,0,128,.08)}
+.fsel{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%236b7280' d='M6 8L0 0h12z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 13px center;padding-right:36px}
+.ttoggle{display:flex;background:var(--bg);border-radius:10px;padding:3px;gap:3px}
+.tbtn{flex:1;padding:9px;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;color:var(--sub);background:transparent;transition:all .15s}
+.tbtn.ai{background:var(--pink);color:#fff}
+.tbtn.ae{background:#111;color:#fff}
+/* ── Buttons ── */
+.btn{display:block;width:100%;padding:14px;border:none;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;text-align:center;font-family:inherit;transition:opacity .15s,transform .1s}
+.btn:active{transform:scale(.98);opacity:.88}
+.btn-p{background:var(--pink);color:#fff;letter-spacing:.5px}
+.btn-s{background:#fff;color:#111;border:1.5px solid #222;letter-spacing:.5px}
+.btn-sm{padding:8px 14px;font-size:13px;border-radius:8px;display:inline-block;width:auto}
+.btn-mt{margin-top:8px}
+/* ── Import options ── */
+.impopt{display:flex;align-items:center;padding:13px;border:1.5px solid var(--border);border-radius:12px;margin-bottom:9px;cursor:pointer;background:#fff;gap:12px;transition:background .15s}
+.impopt:active{background:var(--bg)}
+.impico{width:42px;height:42px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.implbl{font-size:15px;font-weight:700}
+.impsub{font-size:11px;color:var(--sub);margin-top:2px}
+.imparrow{margin-left:auto;color:var(--sub);font-size:18px}
+/* ── Report table ── */
+.rtbl{width:100%;border-collapse:collapse;font-size:13px}
+.rtbl th{font-size:11px;color:var(--sub);font-weight:600;padding:8px 6px;text-align:left;border-bottom:1px solid var(--border)}
+.rtbl th:last-child,.rtbl td:last-child{text-align:right}
+.rtbl td{padding:10px 6px;border-bottom:1px solid var(--border)}
+.rtbl .trow{font-weight:800;background:var(--bg)}
+.rtbl .sep td{padding-top:12px;font-size:11px;color:var(--sub)}
+/* ── Advice ── */
+.acard{background:var(--card);border-radius:14px;padding:14px;margin-bottom:12px;box-shadow:0 1px 6px rgba(0,0,0,.1);border-left:4px solid var(--pink)}
+.acard.w{border-left-color:#111}
+.acard.t{border-left-color:#555}
+.acard.tr{border-left-color:var(--pink2)}
+.acard.g{border-left-color:var(--pink)}
+.atitle{font-size:14px;font-weight:800;margin-bottom:7px}
+.atxt{font-size:13px;line-height:1.65;color:var(--sub)}
+/* ── Modal ── */
+.moverlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;display:none;align-items:flex-end}
+.moverlay.on{display:flex}
+.modal{background:#fff;border-radius:20px 20px 0 0;width:100%;max-height:88vh;overflow-y:auto;padding:18px 14px calc(18px + env(safe-area-inset-bottom,0px))}
+.mhandle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 14px}
+.mtitle{font-size:18px;font-weight:800;margin-bottom:14px}
+/* ── CSV preview ── */
+.cprev{overflow-x:auto;margin-bottom:12px;border-radius:8px;border:1px solid var(--border)}
+.ctbl{border-collapse:collapse;font-size:11px;min-width:100%}
+.ctbl th{background:var(--bg);padding:6px 8px;text-align:left;font-weight:600;white-space:nowrap;border-bottom:1px solid var(--border)}
+.ctbl td{padding:5px 8px;white-space:nowrap;border-bottom:1px solid var(--border)}
+.ctbl tr:last-child td{border-bottom:none}
+/* ── Toast ── */
+.toast{position:fixed;bottom:calc(var(--nav) + 14px);left:50%;transform:translateX(-50%) translateY(16px);background:#111;color:#fff;padding:10px 20px;border-radius:24px;font-size:14px;font-weight:600;z-index:300;opacity:0;transition:all .28s;white-space:nowrap;pointer-events:none}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+/* ── Empty ── */
+.empty{text-align:center;padding:36px 20px;color:var(--sub)}
+.empty-ico{font-size:44px;margin-bottom:10px}
+/* ── Advisor header ── */
+.ahdr{text-align:center;padding:10px 0 18px}
+.ahdr-ico{font-size:38px;margin-bottom:6px}
+.ahdr-title{font-size:16px;font-weight:800}
+.ahdr-sub{font-size:11px;color:var(--sub);margin-top:3px}
+/* ── Section header ── */
+.sechdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.sectitle{font-size:15px;font-weight:800}
+.seclink{font-size:13px;color:var(--pink);cursor:pointer;font-weight:700}
+/* ── Scrollbar hide ── */
+.main::-webkit-scrollbar{display:none}
+</style>
+</head>
+<body>
+
+<!-- ========== HEADER ========== -->
+<header class="hdr">
+  <div style="width:32px"></div>
+  <div class="hdr-center">
+    <div class="hdr-title">KINKY FLOWER STAND</div>
+    <div class="hdr-sub" id="syncStatus">会計帳</div>
+  </div>
+  <button class="hdr-btn" onclick="openSettings()" title="設定">⚙️</button>
+</header>
+
+<!-- ========== MAIN ========== -->
+<main class="main" id="mainEl">
+
+  <!-- ▸▸ DASHBOARD ◂◂ -->
+  <div class="panel on" id="p-dash">
+    <!-- Square 同期ステータスバナー -->
+    <div id="sqBanner" style="display:none;background:#111;color:#fff;border-radius:10px;padding:10px 14px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;gap:10px">
+      <div style="font-size:12px;line-height:1.5">
+        <span style="font-weight:800;color:var(--pink)">■ Square</span>
+        <span id="sqBannerMsg" style="margin-left:6px"></span>
+      </div>
+      <button onclick="squareSync()" id="sqSyncBtn" style="background:var(--pink);color:#fff;border:none;border-radius:6px;padding:5px 12px;font-size:12px;font-weight:800;cursor:pointer;white-space:nowrap">同期</button>
+    </div>
+    <div class="mnav">
+      <button class="mnav-btn" onclick="chMonth(-1)">‹</button>
+      <span class="mdisp" id="md1"></span>
+      <button class="mnav-btn" onclick="chMonth(1)">›</button>
+    </div>
+    <div class="sgrid" id="sumGrid"></div>
+    <div class="card">
+      <p class="ctitle">月次推移（6ヶ月）</p>
+      <div class="ch-wrap"><canvas id="chartTrend"></canvas></div>
+    </div>
+    <div class="card">
+      <p class="ctitle">費用カテゴリ内訳</p>
+      <div class="ch-wrap" style="height:170px" id="expChartWrap">
+        <canvas id="chartExp"></canvas>
+      </div>
+    </div>
+    <div class="card">
+      <div class="sechdr">
+        <span class="sectitle">直近の取引</span>
+        <span class="seclink" onclick="gotoTab('list')">全て表示 →</span>
+      </div>
+      <div id="recentTx"></div>
+    </div>
+  </div>
+
+  <!-- ▸▸ INPUT ◂◂ -->
+  <div class="panel" id="p-input">
+    <div class="stabs">
+      <button class="stab on" id="st-manual" onclick="switchSub('manual')">✏️ 手入力</button>
+      <button class="stab" id="st-import" onclick="switchSub('import')">📁 CSVインポート</button>
+    </div>
+
+    <!-- Manual -->
+    <div id="sub-manual">
+      <div class="card">
+        <p class="ctitle">取引を追加</p>
+        <div class="fg">
+          <div class="ttoggle">
+            <button class="tbtn" id="t-inc" onclick="setType('income')">📈 収入</button>
+            <button class="tbtn ae" id="t-exp" onclick="setType('expense')">📉 支出</button>
+          </div>
+        </div>
+        <div class="fg">
+          <label class="flbl">日付</label>
+          <input type="date" class="finput" id="txDate">
+        </div>
+        <div class="fg">
+          <label class="flbl">金額（円）</label>
+          <input type="number" class="finput" id="txAmt" placeholder="0" inputmode="numeric">
+        </div>
+        <div class="fg">
+          <label class="flbl">カテゴリ</label>
+          <select class="fsel" id="txCat">
+            <option value="仕入れ">🌱 仕入れ</option>
+            <option value="資材・梱包">📦 資材・梱包</option>
+            <option value="交通費">🚗 交通費</option>
+            <option value="水道光熱費">💡 水道光熱費</option>
+            <option value="通信費">📱 通信費</option>
+            <option value="広告・PR">📢 広告・PR</option>
+            <option value="消耗品">🔧 消耗品</option>
+            <option value="その他">📝 その他</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label class="flbl">摘要・メモ</label>
+          <input type="text" class="finput" id="txDesc" placeholder="例：バラ・チューリップ仕入れ">
+        </div>
+        <div class="fg">
+          <label class="flbl">支払方法・発生元</label>
+          <select class="fsel" id="txSrc">
+            <option value="小口現金">💵 小口現金</option>
+            <option value="熊本銀行">🏦 熊本銀行</option>
+            <option value="Square">💳 Square</option>
+            <option value="花き農協">🌿 花き農協</option>
+          </select>
+        </div>
+        <button class="btn btn-p" onclick="addTx()">＋ 追加する</button>
+      </div>
+    </div>
+
+    <!-- Import -->
+    <div id="sub-import" style="display:none">
+      <div class="card">
+        <p class="ctitle">データを取り込む</p>
+        <div class="impopt" onclick="doImport('square')">
+          <div class="impico" style="background:#000;color:#fff;font-size:16px;font-weight:800">■</div>
+          <div>
+            <div class="implbl">Square</div>
+            <div class="impsub">売上CSV（ダッシュボード→レポート→エクスポート）</div>
+          </div>
+          <span class="imparrow">›</span>
+        </div>
+        <div class="impopt" onclick="doImport('noko')">
+          <div class="impico" style="background:#d1ece0">🌿</div>
+          <div>
+            <div class="implbl">花き農協</div>
+            <div class="impsub">仕入れCSV（購買履歴→CSV出力）</div>
+          </div>
+          <span class="imparrow">›</span>
+        </div>
+        <div class="impopt" onclick="doImport('bank')">
+          <div class="impico" style="background:#dbeafe">🏦</div>
+          <div>
+            <div class="implbl">熊本銀行</div>
+            <div class="impsub">入出金明細CSV（ネットバンキング）</div>
+          </div>
+          <span class="imparrow">›</span>
+        </div>
+        <div style="border-top:2px solid var(--pink);margin:14px 0 12px;display:flex;align-items:center;gap:8px">
+          <span style="font-size:11px;font-weight:800;color:var(--pink);white-space:nowrap;padding-right:4px">おすすめ</span>
+        </div>
+        <div class="impopt" onclick="doImport('mf')" style="border-color:var(--pink)">
+          <div class="impico" style="background:var(--pink3);font-size:13px;font-weight:900;color:var(--pink)">MF</div>
+          <div>
+            <div class="implbl">MoneyForward ME</div>
+            <div class="impsub">銀行・農協・全口座をまとめて取込（推奨）</div>
+          </div>
+          <span class="imparrow" style="color:var(--pink)">›</span>
+        </div>
+        <!-- hidden inputs -->
+        <input type="file" id="fi-sq" accept=".csv,.tsv,.txt" style="display:none" onchange="onFile(event,'square')">
+        <input type="file" id="fi-nk" accept=".csv,.tsv,.txt" style="display:none" onchange="onFile(event,'noko')">
+        <input type="file" id="fi-bk" accept=".csv,.tsv,.txt" style="display:none" onchange="onFile(event,'bank')">
+        <input type="file" id="fi-mf" accept=".csv,.tsv,.txt" style="display:none" onchange="onFile(event,'mf')">
+      </div>
+      <div class="card" style="border-left:3px solid var(--pink)">
+        <p class="ctitle">★ MoneyForward ME 連携フロー（推奨）</p>
+        <div style="font-size:13px;line-height:1.9;color:var(--sub)">
+          <p>① <a href="https://moneyforward.com" target="_blank" style="color:var(--pink);font-weight:700">moneyforward.com</a> に無料登録</p>
+          <p>② 熊本銀行・Square・農協口座を追加（自動同期）</p>
+          <p>③ PC版 → 入出金明細 → <strong style="color:var(--text)">「CSVファイルにエクスポート」</strong></p>
+          <p>④ このアプリで「MoneyForward ME」を選んで取り込む</p>
+          <p style="margin-top:8px;padding:8px;background:var(--bg);border-radius:6px;font-size:11px">※ 熊本銀行・農協・Squareの全データが1ファイルにまとまります</p>
+        </div>
+      </div>
+      <div class="card">
+        <p class="ctitle">各サービス個別のCSV取得方法</p>
+        <div style="font-size:13px;line-height:1.85;color:var(--sub)">
+          <p><strong style="color:var(--text)">Square：</strong>ダッシュボード → レポート → 売上 → CSVエクスポート</p>
+          <p style="margin-top:8px"><strong style="color:var(--text)">花き農協：</strong>農協サイト → 購買履歴 → CSV出力</p>
+          <p style="margin-top:8px"><strong style="color:var(--text)">熊本銀行：</strong>ネットバンク → 入出金明細 → CSVダウンロード</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ▸▸ LIST ◂◂ -->
+  <div class="panel" id="p-list">
+    <div class="mnav">
+      <button class="mnav-btn" onclick="chMonth(-1)">‹</button>
+      <span class="mdisp" id="md2"></span>
+      <button class="mnav-btn" onclick="chMonth(1)">›</button>
+    </div>
+    <div class="fbar">
+      <button class="fchip on" onclick="setFilter('all',this)">すべて</button>
+      <button class="fchip" onclick="setFilter('Square',this)">💳 Square売上</button>
+      <button class="fchip" onclick="setFilter('花き農協',this)">🌿 仕入れ</button>
+      <button class="fchip" onclick="setFilter('熊本銀行',this)">🏦 引き落とし</button>
+      <button class="fchip" onclick="setFilter('小口現金',this)">💵 小口現金</button>
+    </div>
+    <div class="card" id="txList"></div>
+  </div>
+
+  <!-- ▸▸ REPORT ◂◂ -->
+  <div class="panel" id="p-report">
+    <div class="mnav">
+      <button class="mnav-btn" onclick="chMonth(-1)">‹</button>
+      <span class="mdisp" id="md3"></span>
+      <button class="mnav-btn" onclick="chMonth(1)">›</button>
+    </div>
+    <div class="card" id="rpMain"></div>
+    <div class="card" id="rpCat"></div>
+    <div class="card" id="rpMargin"></div>
+    <button class="btn btn-s" onclick="exportCSV()">⬇ この月のCSVを書き出す</button>
+  </div>
+
+  <!-- ▸▸ ADVISOR ◂◂ -->
+  <div class="panel" id="p-adv">
+    <div class="ahdr">
+      <div class="ahdr-ico" style="font-size:28px;letter-spacing:2px;font-weight:900;color:var(--pink)">—</div>
+      <div class="ahdr-title">シゴデキ花卉コンサルタント</div>
+      <div class="ahdr-sub">データ分析 × 世界トレンド × 経営提案</div>
+    </div>
+    <div id="advContent"></div>
+  </div>
+
+</main>
+
+<!-- ========== BOTTOM NAV ========== -->
+<nav class="bnav">
+  <div class="nitem on" id="n-dash" onclick="gotoTab('dash')">
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    <span>ホーム</span>
+  </div>
+  <div class="nitem" id="n-input" onclick="gotoTab('input')">
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+    <span>入力</span>
+  </div>
+  <div class="nitem" id="n-list" onclick="gotoTab('list')">
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+    <span>一覧</span>
+  </div>
+  <div class="nitem" id="n-report" onclick="gotoTab('report')">
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2"/><polyline points="3 9 21 9"/><polyline points="9 21 9 9"/></svg>
+    <span>レポート</span>
+  </div>
+  <div class="nitem" id="n-adv" onclick="gotoTab('adv')">
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M12 2a7 7 0 0 1 7 7c0 3.5-2.5 5.5-3 8H8c-.5-2.5-3-4.5-3-8a7 7 0 0 1 7-7z"/><line x1="9" y1="21" x2="15" y2="21"/><line x1="9.5" y1="17" x2="14.5" y2="17"/></svg>
+    <span>アドバイス</span>
+  </div>
+</nav>
+
+<!-- ========== CSV MODAL ========== -->
+<div class="moverlay" id="csvModal">
+  <div class="modal">
+    <div class="mhandle"></div>
+    <h3 class="mtitle" id="csvMTitle">CSVを確認</h3>
+    <div id="csvMBody"></div>
+    <button class="btn btn-p" onclick="confirmImport()">✓ この内容で取り込む</button>
+    <button class="btn btn-s btn-mt" onclick="closeModal()">キャンセル</button>
+  </div>
+</div>
+
+<!-- ========== SETTINGS MODAL ========== -->
+<div class="moverlay" id="settingsModal">
+  <div class="modal">
+    <div class="mhandle"></div>
+    <h3 class="mtitle">設定</h3>
+    <div style="font-size:14px;color:var(--sub);margin-bottom:16px">KINKYFLOWER STAND 会計アプリ</div>
+    <div class="card" style="margin-bottom:12px">
+      <p class="ctitle">データ管理</p>
+      <p style="font-size:13px;color:var(--sub);margin-bottom:12px">全取引データ件数：<strong id="txCount" style="color:var(--text)">0</strong>件</p>
+      <button class="btn btn-s btn-sm" onclick="exportAllCSV()">📤 全データをCSV出力</button>
+    </div>
+    <button class="btn" style="background:#f0f0f0;color:#333;margin-bottom:8px" onclick="resetAll()">🗑 全データをリセット</button>
+    <button class="btn btn-s" onclick="closeModal()">閉じる</button>
+  </div>
+</div>
+
+<!-- ========== TOAST ========== -->
+<div class="toast" id="toast"></div>
+
+<!-- ========== SCRIPTS ========== -->
+<script>
+// ═══════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════
+let txs = JSON.parse(localStorage.getItem('kf_txs') || '[]');
+let curMonth = (() => {
+  const n = new Date();
+  return new Date(n.getFullYear(), n.getMonth(), 1);
+})();
+let curFilter = 'all';
+let curType = 'expense';
+let pendingRows = [], pendingSrc = '';
+const charts = {};
+
+function save() { localStorage.setItem('kf_txs', JSON.stringify(txs)); }
+
+// ═══════════════════════════════════════════════
+//  HELPERS
+// ═══════════════════════════════════════════════
+const yen = (v) => '¥' + Math.abs(v).toLocaleString('ja-JP');
+const monthKey = (d) => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+const monthLabel = (d) => `${d.getFullYear()}年${d.getMonth()+1}月`;
+const fmtDate = (s) => { const d=new Date(s); return `${d.getMonth()+1}/${d.getDate()}`; };
+
+function monthTxs(ym) {
+  const k = ym || monthKey(curMonth);
+  return txs.filter(t => t.date.startsWith(k));
+}
+
+function toast(msg, ms=2400) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('on');
+  setTimeout(() => el.classList.remove('on'), ms);
+}
+
+function closeModal() {
+  document.querySelectorAll('.moverlay').forEach(m => m.classList.remove('on'));
+}
+
+// ═══════════════════════════════════════════════
+//  MONTH NAV
+// ═══════════════════════════════════════════════
+function chMonth(d) {
+  curMonth = new Date(curMonth.getFullYear(), curMonth.getMonth()+d, 1);
+  refreshAll();
+}
+function updateMonthLabels() {
+  const lbl = monthLabel(curMonth);
+  ['md1','md2','md3'].forEach(id => { const e=document.getElementById(id); if(e)e.textContent=lbl; });
+}
+
+// ═══════════════════════════════════════════════
+//  TAB NAVIGATION
+// ═══════════════════════════════════════════════
+function gotoTab(name) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('.nitem').forEach(n => n.classList.remove('on'));
+  document.getElementById('p-'+name).classList.add('on');
+  document.getElementById('n-'+name).classList.add('on');
+  document.getElementById('mainEl').scrollTop = 0;
+  renderTab(name);
+}
+
+function renderTab(name) {
+  if(name==='dash') renderDash();
+  else if(name==='list') renderList();
+  else if(name==='report') renderReport();
+  else if(name==='adv') renderAdv();
+}
+
+function refreshAll() {
+  updateMonthLabels();
+  const active = document.querySelector('.panel.on');
+  if (!active) return;
+  renderTab(active.id.replace('p-',''));
+}
+
+// ═══════════════════════════════════════════════
+//  SUB TAB
+// ═══════════════════════════════════════════════
+function switchSub(name) {
+  ['manual','import'].forEach(s => {
+    document.getElementById('st-'+s).classList.toggle('on', s===name);
+    document.getElementById('sub-'+s).style.display = s===name ? 'block' : 'none';
+  });
+}
+
+// ═══════════════════════════════════════════════
+//  SOURCE → ICON/CLASS
+// ═══════════════════════════════════════════════
+const SRC_ICO = { 'Square':'💳','花き農協':'🌿','熊本銀行':'🏦','小口現金':'💵','MoneyForward':'MF' };
+const SRC_CLS = { 'Square':'sq','花き農協':'nk','熊本銀行':'bk','小口現金':'pc','MoneyForward':'mf' };
+const CAT_ICO = { '売上':'💐','仕入れ':'🌱','資材・梱包':'📦','交通費':'🚗',
+  '水道光熱費':'💡','通信費':'📱','広告・PR':'📢','消耗品':'🔧','その他':'📝' };
+
+function txHTML(tx, showDel) {
+  const inc = tx.amount > 0;
+  const ico = CAT_ICO[tx.category] || SRC_ICO[tx.source] || '💰';
+  const cls = SRC_CLS[tx.source] || 'pc';
+  const del = showDel ? `<span class="txdel" onclick="delTx('${tx.id}')">🗑</span>` : '';
+  return `<div class="txitem">
+    <div class="txico ${cls}">${ico}</div>
+    <div class="txinfo">
+      <div class="txdesc">${tx.description || tx.category}</div>
+      <div class="txmeta">${fmtDate(tx.date)} · ${tx.source} · ${tx.category}</div>
+    </div>
+    <span class="txamt ${inc?'p':'n'}">${inc?'+':'-'}${yen(tx.amount)}</span>
+    ${del}
+  </div>`;
+}
+
+// ═══════════════════════════════════════════════
+//  DASHBOARD
+// ═══════════════════════════════════════════════
+function renderDash() {
+  const mt = monthTxs();
+  let inc=0, exp=0;
+  mt.forEach(t => { if(t.amount>0) inc+=t.amount; else exp+=Math.abs(t.amount); });
+  const prof = inc - exp;
+  const marg = inc > 0 ? prof/inc*100 : 0;
+  const mc = marg>=20?'var(--pink)':marg>=10?'var(--pink2)':'#111';
+
+  document.getElementById('sumGrid').innerHTML = `
+    <div class="sc"><div class="sc-lbl">売上</div><div class="sc-val i">${yen(inc)}</div></div>
+    <div class="sc"><div class="sc-lbl">支出</div><div class="sc-val e">${yen(exp)}</div></div>
+    <div class="sc"><div class="sc-lbl">利益</div><div class="sc-val p" style="color:${mc}">${prof>=0?'+':'-'}${yen(prof)}</div></div>
+    <div class="sc">
+      <div class="sc-lbl">利益率</div>
+      <div class="sc-val p" style="color:${mc}">${marg.toFixed(1)}%</div>
+      <div class="pbar"><div class="pbar-f" style="width:${Math.min(100,Math.max(0,marg))}%;background:${mc}"></div></div>
+    </div>`;
+
+  // Recent
+  const rec = [...txs].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,6);
+  const el = document.getElementById('recentTx');
+  el.innerHTML = rec.length ? rec.map(t=>txHTML(t,false)).join('')
+    : '<div class="empty"><div class="empty-ico">📭</div><p>取引がありません</p></div>';
+
+  renderTrend();
+  renderExpPie();
+}
+
+function renderTrend() {
+  const ctx = document.getElementById('chartTrend');
+  if (!ctx) return;
+  const labs=[], incs=[], exps=[];
+  for(let i=5;i>=0;i--) {
+    const d = new Date(curMonth.getFullYear(), curMonth.getMonth()-i, 1);
+    const mt = monthTxs(monthKey(d));
+    let a=0,b=0;
+    mt.forEach(t=>{ if(t.amount>0)a+=t.amount; else b+=Math.abs(t.amount); });
+    labs.push(`${d.getMonth()+1}月`); incs.push(a); exps.push(b);
+  }
+  if(charts.trend) charts.trend.destroy();
+  charts.trend = new Chart(ctx, {
+    type:'bar',
+    data:{
+      labels:labs,
+      datasets:[
+        {label:'売上',data:incs,backgroundColor:'rgba(255,0,128,.85)',borderRadius:5,borderSkipped:false},
+        {label:'支出',data:exps,backgroundColor:'rgba(80,80,80,.75)',borderRadius:5,borderSkipped:false}
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:true,position:'top',labels:{boxWidth:11,font:{size:11}}}},
+      scales:{
+        x:{grid:{display:false},ticks:{font:{size:11}}},
+        y:{grid:{color:'rgba(0,0,0,.04)'},ticks:{font:{size:11},callback:v=>v>=10000?'¥'+(v/10000).toFixed(0)+'万':'¥'+v}}
+      }
+    }
+  });
+}
+
+function renderExpPie() {
+  const wrap = document.getElementById('expChartWrap');
+  const ctx = document.getElementById('chartExp');
+  if (!ctx) return;
+  const cats = {};
+  monthTxs().filter(t=>t.amount<0).forEach(t=>{ const c=t.category||'その他'; cats[c]=(cats[c]||0)+Math.abs(t.amount); });
+  const lbls = Object.keys(cats), vals = Object.values(cats);
+  const clrs = ['#FF0080','#FF4DB2','#333','#555','#777','#999','#bbb','#ddd','#FF80C0'];
+  if(!lbls.length){ wrap.innerHTML='<p style="text-align:center;color:var(--sub);font-size:13px;padding:20px 0">支出データなし</p>'; return; }
+  if(!document.getElementById('chartExp')){ wrap.innerHTML='<canvas id="chartExp"></canvas>'; }
+  if(charts.exp) charts.exp.destroy();
+  charts.exp = new Chart(ctx, {
+    type:'doughnut',
+    data:{labels:lbls,datasets:[{data:vals,backgroundColor:clrs.slice(0,lbls.length),borderWidth:0}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'62%',
+      plugins:{legend:{position:'right',labels:{boxWidth:9,font:{size:11},padding:7}}}}
+  });
+}
+
+// ═══════════════════════════════════════════════
+//  FILTER & LIST
+// ═══════════════════════════════════════════════
+function setFilter(f, btn) {
+  curFilter = f;
+  document.querySelectorAll('.fchip').forEach(c=>c.classList.remove('on'));
+  btn.classList.add('on');
+  renderList();
+}
+
+function renderList() {
+  const mt = monthTxs().sort((a,b)=>b.date.localeCompare(a.date));
+  const flt = curFilter==='all' ? mt : mt.filter(t=>t.source===curFilter);
+  const el = document.getElementById('txList');
+  el.innerHTML = flt.length ? flt.map(t=>txHTML(t,true)).join('')
+    : '<div class="empty"><div class="empty-ico">📭</div><p>取引がありません</p></div>';
+}
+
+function delTx(id) {
+  if(!confirm('この取引を削除しますか？')) return;
+  txs = txs.filter(t=>t.id!==id);
+  save(); refreshAll(); toast('削除しました');
+}
+
+// ═══════════════════════════════════════════════
+//  MANUAL INPUT
+// ═══════════════════════════════════════════════
+function setType(type) {
+  curType = type;
+  document.getElementById('t-inc').className = 'tbtn' + (type==='income'?' ai':'');
+  document.getElementById('t-exp').className = 'tbtn' + (type==='expense'?' ae':'');
+  const cat = document.getElementById('txCat');
+  if(type==='income') {
+    cat.innerHTML = '<option value="売上">💐 売上</option><option value="その他">📝 その他</option>';
+    document.getElementById('txSrc').value = 'Square';
+  } else {
+    cat.innerHTML = `
+      <option value="仕入れ">🌱 仕入れ</option>
+      <option value="資材・梱包">📦 資材・梱包</option>
+      <option value="交通費">🚗 交通費</option>
+      <option value="水道光熱費">💡 水道光熱費</option>
+      <option value="通信費">📱 通信費</option>
+      <option value="広告・PR">📢 広告・PR</option>
+      <option value="消耗品">🔧 消耗品</option>
+      <option value="その他">📝 その他</option>`;
+  }
+}
+
+function addTx() {
+  const date = document.getElementById('txDate').value;
+  const amt  = parseFloat(document.getElementById('txAmt').value);
+  const cat  = document.getElementById('txCat').value;
+  const desc = document.getElementById('txDesc').value.trim();
+  const src  = document.getElementById('txSrc').value;
+  if (!date) { toast('⚠ 日付を入力してください'); return; }
+  if (!amt || amt <= 0) { toast('⚠ 金額を入力してください'); return; }
+  txs.push({
+    id: Date.now()+'_'+Math.random().toString(36).slice(2,6),
+    date, category:cat,
+    description: desc||cat,
+    source: src,
+    amount: curType==='income' ? amt : -amt
+  });
+  save();
+  document.getElementById('txAmt').value = '';
+  document.getElementById('txDesc').value = '';
+  toast('✓ 追加しました！');
+  refreshAll();
+}
+
+// ═══════════════════════════════════════════════
+//  CSV IMPORT
+// ═══════════════════════════════════════════════
+function doImport(src) {
+  const map = {square:'fi-sq', noko:'fi-nk', bank:'fi-bk', mf:'fi-mf'};
+  document.getElementById(map[src]).click();
+}
+
+function onFile(e, src) {
+  const file = e.target.files[0];
+  if (!file) return;
+  e.target.value = '';
+  // MoneyForward exports UTF-8; banks/POS often use Shift_JIS
+  // Auto-detect: try UTF-8 first for MF, Shift_JIS first for others
+  const firstEnc = src === 'mf' ? 'UTF-8' : 'Shift_JIS';
+  const secondEnc = src === 'mf' ? 'Shift_JIS' : 'UTF-8';
+  Papa.parse(file, {
+    encoding: firstEnc, skipEmptyLines: true,
+    complete: (r) => {
+      // Fallback if data looks corrupted (mojibake check)
+      const sample = JSON.stringify(r.data.slice(0,3));
+      const hasMojibake = sample.includes('ï¿½') || (r.errors.length > 0 && !r.data.length);
+      if (hasMojibake) {
+        Papa.parse(file, { encoding: secondEnc, skipEmptyLines: true, complete: (r2) => showPreview(r2.data, src) });
+      } else {
+        showPreview(r.data, src);
+      }
+    }
+  });
+}
+
+// MoneyForward ME CSV自動判定
+function isMFFormat(headers) {
+  const h = headers.join(',');
+  return h.includes('保有金融機関') || h.includes('計算対象') || h.includes('大項目');
+}
+
+function detectCols(headers) {
+  const h = headers.map(x=>(x||'').toLowerCase().trim());
+  const find = (pats) => { for(const p of pats){ const i=h.findIndex(x=>x.includes(p.toLowerCase())); if(i>=0)return i; } return -1; };
+  return {
+    isMF:      isMFFormat(headers),
+    date:      find(['日付','取引日','年月日','date','決済日','伝票日','日時']),
+    amount:    find(['金額（円）','金額(円)','金額','合計','決済金額','売上金額','支払','お支払','出金','入金','amount','税込金額','合計金額']),
+    desc:      find(['内容','摘要','商品名','説明','品名','取引先','description','件名','品目']),
+    pay:       find(['支払金額','お支払金額','出金金額','引落金額']),
+    dep:       find(['入金金額','お預り金額','振込金額']),
+    mfInst:    find(['保有金融機関']),      // MF: 銀行名
+    mfCat:     find(['大項目']),           // MF: カテゴリ
+    mfSub:     find(['中項目']),           // MF: サブカテゴリ
+    mfTransfer:find(['振替']),             // MF: 振替フラグ
+    mfCalc:    find(['計算対象'])          // MF: 計算対象フラグ
+  };
+}
+
+// MoneyForward の保有金融機関名 → 当アプリのsource名にマッピング
+function mfInstToSource(inst) {
+  if (!inst) return 'MoneyForward';
+  const i = inst.toLowerCase();
+  if (i.includes('熊本銀行') || i.includes('肥後銀行')) return '熊本銀行';
+  if (i.includes('農協') || i.includes('農業協同') || i.includes('花き')) return '花き農協';
+  if (i.includes('square') || i.includes('スクエア')) return 'Square';
+  return inst; // そのまま保持
+}
+
+// MoneyForward の大項目 → 当アプリのカテゴリにマッピング
+function mfCatToLocal(mfCat, mfSub) {
+  const c = (mfCat||'').toLowerCase();
+  const s = (mfSub||'').toLowerCase();
+  if (c.includes('収入') || c.includes('売上') || c.includes('給与')) return '売上';
+  if (c.includes('食費') || c.includes('日用')) return '消耗品';
+  if (c.includes('交通') || c.includes('移動')) return '交通費';
+  if (c.includes('通信') || c.includes('電話') || c.includes('スマホ')) return '通信費';
+  if (c.includes('光熱') || c.includes('水道') || c.includes('電気') || c.includes('ガス')) return '水道光熱費';
+  if (c.includes('広告') || c.includes('宣伝') || c.includes('pr')) return '広告・PR';
+  if (c.includes('仕入') || s.includes('仕入') || c.includes('花') || s.includes('花')) return '仕入れ';
+  if (c.includes('資材') || s.includes('資材') || c.includes('梱包')) return '資材・梱包';
+  return 'その他';
+}
+
+function showPreview(rows, src) {
+  if (rows.length < 2) { toast('⚠ データが見つかりませんでした'); return; }
+
+  // Auto-detect MoneyForward format regardless of selected source
+  const hdrs = rows[0];
+  const cols = detectCols(hdrs);
+  if (cols.isMF && src !== 'mf') src = 'mf'; // 自動判別で上書き
+
+  pendingRows = rows; pendingSrc = src;
+  const names = {square:'Square 売上', noko:'花き農協 仕入れ', bank:'熊本銀行 明細', mf:'MoneyForward ME'};
+  document.getElementById('csvMTitle').textContent = (names[src] || src) + ' を取り込む';
+
+  const prev = rows.slice(1, Math.min(5, rows.length));
+  const mfBadge = cols.isMF ? `<span style="background:var(--pink);color:#fff;font-size:10px;font-weight:800;padding:2px 7px;border-radius:10px;margin-left:6px">MoneyForward自動判別</span>` : '';
+
+  const colInfo = `
+    <div style="font-size:12px;color:var(--sub);background:var(--bg);border-radius:8px;padding:10px;margin-bottom:10px">
+      <div style="font-weight:700;color:var(--text);margin-bottom:4px">
+        📊 ${rows.length-1}件を検出${mfBadge}
+      </div>
+      ${cols.isMF ? `
+        <div>日付：${cols.date>=0?hdrs[cols.date]:'未検出'} ／ 金額：${cols.amount>=0?hdrs[cols.amount]:'未検出'}</div>
+        <div>内容：${cols.desc>=0?hdrs[cols.desc]:'未検出'} ／ 金融機関：${cols.mfInst>=0?hdrs[cols.mfInst]:'未検出'}</div>
+        <div style="margin-top:4px;color:var(--pink);font-weight:600">振替取引は自動でスキップします</div>
+      ` : `
+        <div>日付：${cols.date>=0?hdrs[cols.date]:'未検出'} ／ 金額：${cols.amount>=0?hdrs[cols.amount]:'未検出'} ／ 摘要：${cols.desc>=0?hdrs[cols.desc]:'未検出'}</div>
+      `}
+    </div>`;
+  const tbl = `<div class="cprev">
+    <table class="ctbl">
+      <tr>${hdrs.map(h=>`<th>${h||'?'}</th>`).join('')}</tr>
+      ${prev.map(r=>`<tr>${r.map(c=>`<td>${(c||'').slice(0,16)}</td>`).join('')}</tr>`).join('')}
+    </table></div>`;
+  document.getElementById('csvMBody').innerHTML = colInfo + tbl;
+  document.getElementById('csvModal').classList.add('on');
+}
+
+// ─── MoneyForward ME 専用インポート ───────────────
+function confirmImportMF(rows, cols) {
+  let added=0, skip=0, skipTransfer=0;
+
+  for(let i=1; i<rows.length; i++) {
+    const row = rows[i];
+    if (!row || !row.length) continue;
+
+    // 計算対象 = 0 の行はスキップ（MoneyForwardで除外設定された取引）
+    if (cols.mfCalc >= 0) {
+      const calcFlag = String(row[cols.mfCalc]).trim();
+      if (calcFlag === '0') { skip++; continue; }
+    }
+
+    // 振替 = TRUE の行はスキップ（口座間移動など）
+    if (cols.mfTransfer >= 0) {
+      const tf = String(row[cols.mfTransfer]).trim().toLowerCase();
+      if (tf === 'true' || tf === '1' || tf === '振替') { skipTransfer++; continue; }
+    }
+
+    // 日付
+    const dateStr = normalizeDate(cols.date >= 0 ? row[cols.date] : '');
+    if (!dateStr) { skip++; continue; }
+
+    // 金額（MoneyForwardは収入+、支出- で統一）
+    const rawAmt = cols.amount >= 0 ? row[cols.amount] : '0';
+    // MFの金額列は "1,500" や "-1,500" 形式（¥なし、カンマあり）
+    const amtStr = String(rawAmt).replace(/[,\s　]/g, '').trim();
+    const finalAmt = parseFloat(amtStr);
+    if (isNaN(finalAmt) || finalAmt === 0) { skip++; continue; }
+
+    // 内容（摘要）
+    const desc = (cols.desc >= 0 ? row[cols.desc] : '') || '取引';
+
+    // 保有金融機関 → source
+    const instRaw = cols.mfInst >= 0 ? row[cols.mfInst] : '';
+    const source = mfInstToSource(instRaw) || 'MoneyForward';
+
+    // 大項目 → カテゴリ
+    const mfCatRaw = cols.mfCat >= 0 ? row[cols.mfCat] : '';
+    const mfSubRaw = cols.mfSub >= 0 ? row[cols.mfSub] : '';
+    const category = mfCatToLocal(mfCatRaw, mfSubRaw);
+
+    // 重複チェック
+    const isDup = txs.some(t =>
+      t.date === dateStr && t.amount === finalAmt && t.description === desc.slice(0,60)
+    );
+    if (isDup) { skip++; continue; }
+
+    txs.push({
+      id: Date.now()+'_mf_'+i+'_'+Math.random().toString(36).slice(2,5),
+      date: dateStr,
+      amount: finalAmt,         // MFはそのまま（+収入, -支出）
+      category,
+      description: desc.slice(0, 60),
+      source
+    });
+    added++;
+  }
+
+  save(); closeModal(); refreshAll();
+  const msg = `✓ MoneyForward: ${added}件取込`
+    + (skipTransfer ? `（振替${skipTransfer}件除外）` : '')
+    + (skip ? `（${skip}件スキップ）` : '');
+  toast(msg, 3500);
+}
+// ─────────────────────────────────────────────────
+
+function normalizeDate(s) {
+  if (!s) return null;
+  s = s.trim().replace(/\s+/g,'');
+  let m;
+  m = s.match(/(\d{4})[\/\-\.](\d{1,2})[\/\-\.](\d{1,2})/);
+  if(m) return `${m[1]}-${m[2].padStart(2,'0')}-${m[3].padStart(2,'0')}`;
+  m = s.match(/(\d{4})年(\d{1,2})月(\d{1,2})日/);
+  if(m) return `${m[1]}-${m[2].padStart(2,'0')}-${m[3].padStart(2,'0')}`;
+  m = s.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+  if(m) return `${m[3]}-${m[1].padStart(2,'0')}-${m[2].padStart(2,'0')}`;
+  m = s.match(/(\d{8})/);
+  if(m){ const d=m[1]; return `${d.slice(0,4)}-${d.slice(4,6)}-${d.slice(6,8)}`; }
+  return null;
+}
+
+function parseAmt(s) {
+  if (!s && s!==0) return 0;
+  s = String(s).replace(/[¥,\s円　\-]/g,'').trim();
+  const n = parseFloat(s);
+  return isNaN(n) ? 0 : n;
+}
+
+function confirmImport() {
+  const rows = pendingRows, src = pendingSrc;
+  const hdrs = rows[0];
+  const cols = detectCols(hdrs);
+
+  // MoneyForward専用処理
+  if (cols.isMF || src === 'mf') {
+    return confirmImportMF(rows, cols);
+  }
+
+  const srcName = {square:'Square', noko:'花き農協', bank:'熊本銀行'}[src];
+  const isIncome = src==='square';
+  const defCat = {square:'売上', noko:'仕入れ', bank:'その他'}[src];
+  let added=0, skip=0;
+
+  for(let i=1; i<rows.length; i++) {
+    const row = rows[i];
+    if(!row||!row.length) continue;
+
+    const dateStr = normalizeDate(cols.date>=0 ? row[cols.date] : '');
+    if (!dateStr) { skip++; continue; }
+
+    let finalAmt = 0;
+    if (src==='bank' && cols.pay>=0 && cols.dep>=0) {
+      const pay = parseAmt(row[cols.pay]);
+      const dep = parseAmt(row[cols.dep]);
+      if (pay>0) finalAmt = -pay;
+      else if (dep>0) finalAmt = dep;
+      else { skip++; continue; }
+    } else {
+      const raw = cols.amount>=0 ? parseAmt(row[cols.amount]) : 0;
+      if (!raw) { skip++; continue; }
+      finalAmt = isIncome ? Math.abs(raw) : -Math.abs(raw);
+    }
+
+    const desc = (cols.desc>=0 ? row[cols.desc] : '') || defCat;
+
+    // Dedup
+    const dup = txs.some(t=> t.date===dateStr && t.amount===finalAmt && t.description===desc && t.source===srcName);
+    if (dup) { skip++; continue; }
+
+    txs.push({
+      id: Date.now()+'_'+i+'_'+Math.random().toString(36).slice(2,5),
+      date: dateStr, category: defCat,
+      description: desc.slice(0,60),
+      source: srcName, amount: finalAmt
+    });
+    added++;
+  }
+
+  save(); closeModal(); refreshAll();
+  toast(`✓ ${added}件を取り込みました${skip?'（'+skip+'件スキップ）':''}`);
+}
+
+// ═══════════════════════════════════════════════
+//  REPORT
+// ═══════════════════════════════════════════════
+function renderReport() {
+  const mt = monthTxs();
+  const lbl = monthLabel(curMonth);
+  let sq=0, nk=0, bk=0, pc=0;
+  const cats = {};
+  mt.forEach(t => {
+    if(t.source==='Square') sq += t.amount;
+    else if(t.source==='花き農協') nk += Math.abs(t.amount);
+    else if(t.source==='熊本銀行') bk += Math.abs(t.amount);
+    else pc += Math.abs(t.amount);
+    if(t.amount<0) cats[t.category||'その他'] = (cats[t.category||'その他']||0)+Math.abs(t.amount);
+  });
+  const totalExp = nk+bk+pc;
+  const profit = sq - totalExp;
+  const marg = sq>0 ? profit/sq*100 : 0;
+  const mc = marg>=20?'var(--pink)':marg>=10?'var(--pink2)':'#111';
+
+  document.getElementById('rpMain').innerHTML = `
+    <p class="ctitle">損益計算書　${lbl}</p>
+    <table class="rtbl">
+      <tr><th>項目</th><th>金額</th></tr>
+      <tr><td>💐 売上（Square）</td><td style="color:var(--pink);font-weight:700">+${yen(sq)}</td></tr>
+      <tr class="sep"><td colspan="2">▼ 支出</td></tr>
+      <tr><td>🌿 仕入れ（花き農協）</td><td style="color:#111">−${yen(nk)}</td></tr>
+      <tr><td>🏦 引き落とし（熊本銀行）</td><td style="color:#111">−${yen(bk)}</td></tr>
+      <tr><td>💵 小口現金</td><td style="color:#111">−${yen(pc)}</td></tr>
+      <tr class="trow"><td>経費合計</td><td style="color:#333">−${yen(totalExp)}</td></tr>
+      <tr class="trow" style="border-top:2px solid var(--pink)">
+        <td style="color:var(--pink)">当月純利益</td>
+        <td style="color:${mc};font-size:18px">${profit>=0?'+':'−'}${yen(profit)}</td>
+      </tr>
+    </table>`;
+
+  const catRows = Object.entries(cats).sort((a,b)=>b[1]-a[1]);
+  document.getElementById('rpCat').innerHTML = `
+    <p class="ctitle">費用カテゴリ内訳</p>
+    <table class="rtbl">
+      <tr><th>カテゴリ</th><th>金額</th><th>割合</th></tr>
+      ${catRows.length ? catRows.map(([c,v])=>`
+        <tr><td>${c}</td>
+          <td style="color:#111">−${yen(v)}</td>
+          <td>${totalExp>0?(v/totalExp*100).toFixed(0):0}%</td></tr>`).join('')
+        : '<tr><td colspan="3" style="text-align:center;color:var(--sub)">支出データなし</td></tr>'}
+    </table>`;
+
+  document.getElementById('rpMargin').innerHTML = `
+    <p class="ctitle">収益性分析</p>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <span style="font-size:13px;color:var(--sub)">売上利益率</span>
+      <span style="font-size:22px;font-weight:800;color:${mc}">${marg.toFixed(1)}%</span>
+    </div>
+    <div class="pbar"><div class="pbar-f" style="width:${Math.min(100,Math.max(0,marg))}%;background:${mc}"></div></div>
+    <p style="font-size:12px;color:var(--sub);margin-top:10px">
+      目安：優秀 25%以上 ／ 良好 15〜25% ／ 要改善 15%未満
+    </p>
+    <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px">
+      <div style="background:var(--bg);border-radius:8px;padding:10px">
+        <div style="color:var(--sub)">仕入れ比率</div>
+        <div style="font-weight:800;font-size:15px">${sq>0?(nk/sq*100).toFixed(1):0}%</div>
+      </div>
+      <div style="background:var(--bg);border-radius:8px;padding:10px">
+        <div style="color:var(--sub)">取引件数</div>
+        <div style="font-weight:800;font-size:15px">${mt.length}件</div>
+      </div>
+    </div>`;
+}
+
+function exportCSV() {
+  const mt = monthTxs().sort((a,b)=>a.date.localeCompare(b.date));
+  const lbl = monthLabel(curMonth).replace('年','年').replace('月','月');
+  const rows = [['日付','カテゴリ','摘要','収入','支出','支払方法']];
+  mt.forEach(t => rows.push([t.date, t.category||'', t.description||'', t.amount>0?t.amount:'', t.amount<0?Math.abs(t.amount):'', t.source||'']));
+  const csv = rows.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href=url; a.download=`KINKYFLOWER_${lbl}_会計.csv`; a.click();
+  URL.revokeObjectURL(url);
+  toast('✓ CSVを書き出しました');
+}
+
+// ═══════════════════════════════════════════════
+//  ADVISOR
+// ═══════════════════════════════════════════════
+function renderAdv() {
+  const mt = monthTxs();
+  let inc=0, exp=0, nk=0;
+  mt.forEach(t=>{
+    if(t.amount>0) inc+=t.amount;
+    else { exp+=Math.abs(t.amount); if(t.source==='花き農協')nk+=Math.abs(t.amount); }
+  });
+  const prof = inc - exp;
+  const marg = inc>0 ? prof/inc*100 : 0;
+  const purchR = inc>0 ? nk/inc*100 : 0;
+  const mo = curMonth.getMonth()+1;
+  const cards = [];
+
+  // ─ Data-driven cards ─
+  if (inc===0 && exp===0) {
+    cards.push({cls:'', ico:'📊', ttl:'まずはデータを入力しましょう',
+      txt:'Square・花き農協・熊本銀行のCSVをインポートするか、手動で取引を入力してください。データが入ると、ここに経営アドバイスが自動表示されます。'});
+  } else {
+    if (marg >= 25) {
+      cards.push({cls:'g', ico:'🏆', ttl:`利益率${marg.toFixed(1)}%　優秀です！`,
+        txt:'花卉小売業の平均利益率は15〜20%程度とされます。この水準を維持しながら、売上規模の拡大を検討する好機です。高単価商品（ブーケ・アレンジメント・定期便）の比率を高めることで更なる成長が見込めます。'});
+    } else if (marg >= 15) {
+      cards.push({cls:'g', ico:'✅', ttl:`利益率${marg.toFixed(1)}%　良好な水準です`,
+        txt:'業界平均並みの利益率です。仕入れコストの最適化や、付加価値商品の販売比率を上げることで25%以上を目指せます。'});
+    } else if (inc > 0) {
+      cards.push({cls:'w', ico:'⚠️', ttl:`利益率${marg.toFixed(1)}%　改善が必要です`,
+        txt:`目標は20〜25%。主な改善策：①仕入れ単価の見直し（農協の共同購入や旬の花材活用）②ロス削減（売れ残り花材をドライフラワーや花びら販売へ転換）③単価アップ（ラッピング・アレンジ料金の設定）`});
+    }
+    if (purchR > 55) {
+      cards.push({cls:'w', ico:'🌱', ttl:`仕入れ比率${purchR.toFixed(0)}%　ロス管理が重要`,
+        txt:'仕入れが売上の半分以上を占めています。週単位での売れ筋分析と発注量の最適化が利益改善の近道です。また、端材花材のミニブーケ（500〜800円）販売も効果的です。'});
+    }
+  }
+
+  // ─ Seasonal tips ─
+  const seas = {
+    1:{cls:'tr',ico:'🎍',ttl:'1月：お正月・成人式シーズン',txt:'松・梅・南天など縁起物の和花が需要ピーク。成人式向けコサージュや胡蝶蘭の法人需要（式場・ホテル）も狙い目。正月アレンジメントは1月3日頃まで需要があります。'},
+    2:{cls:'tr',ico:'❤️',ttl:'2月：バレンタインデー需要',txt:'赤バラの需要が急増。ただし競合も多いため、差別化として「白バラ×ピンク」の友チョコブーケや、チョコレートとのセット販売が効果的。仕入れは1週間前から計画的に。'},
+    3:{cls:'tr',ico:'🎓',ttl:'3月：卒業式・ひな祭りシーズン',txt:'卒業式の花束需要が最大。スイートピー・チューリップ・ラナンキュラスが人気。学校・幼稚園への法人営業（コサージュ一括受注）は年間安定収益に。'},
+    4:{cls:'tr',ico:'🌷',ttl:'4月：入学式・お花見シーズン',txt:'チューリップ・アネモネ・ストック中心のパステルカラーが人気。新生活需要として「部屋に飾る1,000〜2,000円の小ぶりブーケ」も好評。街頭での目立つディスプレイが集客に有効。'},
+    5:{cls:'tr',ico:'👩',ttl:'5月：年間最大イベント・母の日',txt:'母の日（第2日曜）は年間最大の売上機会。カーネーション単品より「フラワーボックス」「プリザーブドフラワー」などの3,000〜8,000円商品が利益率向上に貢献。前年比データを活用し仕入れを最適化しましょう。'},
+    6:{cls:'tr',ico:'💒',ttl:'6月：ブライダルシーズン開幕',txt:'ジューンブライドのウェディング需要が高まります。アジサイ・ラナンキュラス・スウィートウィリアムが人気。式場・ブライダルサロンとの提携は安定した法人需要の確保につながります。'},
+    7:{cls:'tr',ico:'🏮',ttl:'7月：お盆前・夏の需要',txt:'お盆向け仏花（菊・りんどう・グラジオラス）の需要が上昇。夏場は鮮度管理がロス削減の鍵。冷蔵設備の活用と、水揚げの徹底が品質維持に不可欠です。'},
+    8:{cls:'tr',ico:'🌻',ttl:'8月：お盆・夏の最盛期',txt:'ひまわり・グラジオラス・トルコキキョウが旬。お盆の仏花需要も引き続き高い。暑さによる鮮度低下対策として、朝早い仕入れと水替えの頻度を増やすことが重要です。'},
+    9:{cls:'tr',ico:'🍂',ttl:'9月：敬老の日・秋の訪れ',txt:'敬老の日（第3月曜）はカーネーション・リンドウが定番。コスモス・ダリアなど秋色花材も需要増。秋の行楽シーズンに合わせたドライフラワーリースも人気商品になり得ます。'},
+    10:{cls:'tr',ico:'🎃',ttl:'10月：ハロウィン・秋の深まり',txt:'オレンジ・ブラック・パープル系でハロウィンアレンジが人気。ダリア・ケイトウ・コスモスで秋ブーケも好調。SNS映えするアレンジメントの写真投稿で自然な宣伝効果が期待できます。'},
+    11:{cls:'tr',ico:'🍁',ttl:'11月：クリスマス準備スタート',txt:'シクラメン・ポインセチアの鉢植えが需要増。クリスマスリースや松ぼっくり装飾の需要も。早めの仕入れと店頭ディスプレイのクリスマス模様替えが来客数増加に貢献します。'},
+    12:{cls:'tr',ico:'🎄',ttl:'12月：クリスマス・年末の最繁忙期',txt:'クリスマスアレンジ・リース・ポインセチアが主役。12/23〜25が売上のピーク。年末の仏花・御正月準備用の花材も需要あり。この時期の売上が年間利益を大きく左右します。'}
+  };
+  if(seas[mo]) cards.push(seas[mo]);
+
+  // ─ Global trends ─
+  cards.push({cls:'t',ico:'🌍',ttl:'世界トレンド：サステナブルフラワー',
+    txt:'欧米で急拡大中の「サステナブルフラワー」（地元産・農薬削減・フェアトレード）需要は日本にも波及中。国産・熊本産であることをラベルやSNSで積極発信することが差別化の武器になります。'});
+
+  cards.push({cls:'t',ico:'📱',ttl:'集客戦略：Instagram Reels活用法',
+    txt:'花屋のInstagramリールは業界でもトップクラスのエンゲージメント率。「仕入れ・アレンジ工程・開店前の並び」などのビハインドシーン動画が特に人気。週2〜3投稿を目安に、#熊本花屋 #KINKYFLOWERSTANDタグを活用しましょう。'});
+
+  cards.push({cls:'t',ico:'💡',ttl:'安定収益源：法人フラワー定期便',
+    txt:'美容院・クリニック・レストラン・ホテルへの週次・月次のフラワー定期便は、月10〜50件の法人契約で安定基盤が作れます。単価5,000〜15,000円/件で、仕入れ最適化にもつながります。熊本市内の法人への直営業がおすすめです。'});
+
+  cards.push({cls:'t',ico:'🤝',ttl:'収益多様化：ワークショップ開催',
+    txt:'フラワーアレンジメント・リース作りなどのワークショップは客単価5,000〜10,000円で利益率が高く、新規顧客の獲得にも有効です。SNSで告知しやすく、口コミ波及効果も期待できます。月1〜2回からスモールスタートがおすすめです。'});
+
+  document.getElementById('advContent').innerHTML = cards.map(c=>`
+    <div class="acard ${c.cls}">
+      <div class="atitle">${c.ico} ${c.ttl}</div>
+      <div class="atxt">${c.txt}</div>
+    </div>`).join('');
+}
+
+// ═══════════════════════════════════════════════
+//  SETTINGS
+// ═══════════════════════════════════════════════
+function openSettings() {
+  document.getElementById('txCount').textContent = txs.length;
+  document.getElementById('settingsModal').classList.add('on');
+}
+
+function exportAllCSV() {
+  const sorted = [...txs].sort((a,b)=>a.date.localeCompare(b.date));
+  const rows = [['日付','カテゴリ','摘要','収入','支出','支払方法']];
+  sorted.forEach(t=>rows.push([t.date,t.category||'',t.description||'',t.amount>0?t.amount:'',t.amount<0?Math.abs(t.amount):'',t.source||'']));
+  const csv = rows.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href=url; a.download='KINKYFLOWER_全データ.csv'; a.click();
+  URL.revokeObjectURL(url);
+  toast('✓ 全データをCSV出力しました');
+}
+
+function resetAll() {
+  if(!confirm('全取引データを削除します。\nこの操作は取り消せません。')) return;
+  if(!confirm('本当に削除しますか？')) return;
+  txs = []; save(); closeModal(); refreshAll();
+  toast('リセットしました');
+}
+
+// ═══════════════════════════════════════════════
+//  SQUARE 自動同期
+// ═══════════════════════════════════════════════
+const SQ_JSON_URL = './data/square_data.json';  // GitHub Pages でのパス
+
+async function squareSync(showToastOnNoNew = false) {
+  const btn = document.getElementById('sqSyncBtn');
+  const msg = document.getElementById('sqBannerMsg');
+  if (btn) { btn.textContent = '取得中…'; btn.disabled = true; }
+
+  try {
+    const res = await fetch(SQ_JSON_URL + '?t=' + Date.now()); // キャッシュ回避
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+
+    const remoteUpdated = data.updated_at || '';
+    const localUpdated  = localStorage.getItem('kf_sq_last_sync') || '';
+
+    if (!data.transactions || data.transactions.length === 0) {
+      if (msg) msg.textContent = 'データなし（GitHub Actionsを確認）';
+      return;
+    }
+
+    // 既存のSquareトランザクションのIDセット
+    const existingIds = new Set(txs.filter(t => t.squareId).map(t => t.squareId));
+    let added = 0;
+
+    for (const sq of data.transactions) {
+      if (!sq.squareId || existingIds.has(sq.squareId)) continue;
+      txs.push({
+        id:          'sq_' + sq.squareId,
+        squareId:    sq.squareId,
+        date:        sq.date,
+        amount:      sq.amount,
+        category:    sq.category || '売上',
+        description: sq.description || 'Square売上',
+        source:      'Square'
+      });
+      existingIds.add(sq.squareId);
+      added++;
+    }
+
+    if (added > 0) {
+      save();
+      refreshAll();
+      toast(`✓ Square: ${added}件の新しい売上を取込みました`);
+    } else if (showToastOnNoNew) {
+      toast('Square: 新しいデータはありません');
+    }
+
+    // 最終同期日時を保存・表示
+    localStorage.setItem('kf_sq_last_sync', remoteUpdated);
+    const syncDate = remoteUpdated ? remoteUpdated.slice(0, 10) : '不明';
+    if (msg) msg.textContent = `最終同期 ${syncDate}（${data.count}件）`;
+    updateSyncStatus(syncDate);
+
+  } catch (e) {
+    // GitHub Pagesにまだ配置されていない場合（ローカル確認時など）は静かに失敗
+    if (msg) msg.textContent = 'Square未接続（GitHub Pages設定後に有効）';
+    console.info('Square sync skipped:', e.message);
+  } finally {
+    if (btn) { btn.textContent = '同期'; btn.disabled = false; }
+  }
+}
+
+function updateSyncStatus(dateStr) {
+  const el = document.getElementById('syncStatus');
+  if (el && dateStr) el.textContent = `Square同期済 ${dateStr}`;
+}
+
+function initSquareBanner() {
+  const banner = document.getElementById('sqBanner');
+  if (!banner) return;
+  banner.style.display = 'flex';
+  const lastSync = localStorage.getItem('kf_sq_last_sync');
+  const msg = document.getElementById('sqBannerMsg');
+  if (lastSync) {
+    if (msg) msg.textContent = `最終同期 ${lastSync.slice(0,10)}`;
+    updateSyncStatus(lastSync.slice(0,10));
+  } else {
+    if (msg) msg.textContent = 'GitHub Pages 公開後に自動同期';
+  }
+}
+
+// ═══════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════
+function init() {
+  document.getElementById('txDate').value = new Date().toISOString().split('T')[0];
+  setType('expense');
+  updateMonthLabels();
+  renderDash();
+  initSquareBanner();
+  // アプリ起動時に自動で Square データを取得（静かに失敗）
+  squareSync(false);
+}
+window.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
