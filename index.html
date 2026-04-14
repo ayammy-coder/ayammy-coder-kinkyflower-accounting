@@ -282,6 +282,14 @@ html,body{height:100%;font-family:-apple-system,'Hiragino Sans','Yu Gothic UI',s
           </div>
           <span class="imparrow">›</span>
         </div>
+        <div class="impopt" onclick="syncHanakiSheet()" style="border-color:#2da96e;background:#f0faf5">
+          <div class="impico" style="background:#2da96e;font-size:15px">🌿</div>
+          <div>
+            <div class="implbl" style="color:#2da96e">花き農協 ← スプレッドシート</div>
+            <div class="impsub">Googleスプレッドシート「仕入れ」タブを自動取得</div>
+          </div>
+          <button id="hanakiSyncBtn" style="background:#2da96e;color:#fff;border:none;border-radius:6px;padding:5px 10px;font-size:11px;font-weight:800;cursor:pointer;white-space:nowrap" onclick="event.stopPropagation();syncHanakiSheet()">🔄 自動取得</button>
+        </div>
         <div class="impopt" onclick="doImport('noko')">
           <div class="impico" style="background:#d1ece0">🌿</div>
           <div>
@@ -448,6 +456,9 @@ let curFilter = 'all';
 let curType = 'expense';
 let pendingRows = [], pendingSrc = '';
 const charts = {};
+
+// ── 花き農協 スプレッドシート URL（仕入れタブ）────────
+const HANAKI_SHEET_URL = 'https://docs.google.com/spreadsheets/d/1avnccAfWuNzULexWUP_FKEGSmHoF-owU4SMuhSOMMAY/gviz/tq?tqx=out:csv&sheet=%E4%BB%95%E5%85%A5%E3%82%8C';
 
 function save() { localStorage.setItem('kf_txs', JSON.stringify(txs)); }
 
@@ -1044,34 +1055,43 @@ function renderSquareBreakdown(mt) {
   if (sqTxs.length === 0) { el.style.display = 'none'; return; }
   el.style.display = 'block';
 
-  // カテゴリ別集計
-  const bycat = { coffee:0, flower:0, mixed:0, other:0 };
+  // ── アイテムベース集計（sq_breakdown 優先）──
+  const bycat = { flower:0, coffee:0, other:0 };
   const byPay = { cash:0, other:0 };
-  const byCatCount = { coffee:0, flower:0, mixed:0, other:0 };
   const byPayCount = { cash:0, other:0 };
-  let total = 0;
+  let totalTx = 0;
 
   sqTxs.forEach(t => {
-    const c = t.sq_category || 'other';
     const p = t.payment_method || 'other';
-    bycat[c] = (bycat[c]||0) + t.amount;
     byPay[p] = (byPay[p]||0) + t.amount;
-    byCatCount[c] = (byCatCount[c]||0) + 1;
     byPayCount[p] = (byPayCount[p]||0) + 1;
-    total += t.amount;
+    totalTx += t.amount;
+
+    if (t.sq_breakdown) {
+      // ★ アイテム単位の内訳があればそれを使う
+      bycat.flower += (t.sq_breakdown.flower || 0);
+      bycat.coffee += (t.sq_breakdown.coffee || 0);
+      bycat.other  += (t.sq_breakdown.other  || 0);
+    } else {
+      // 旧データ（sq_category のみ）は会計単位でフォールバック
+      const c = t.sq_category || 'other';
+      const key = (c === 'flower' || c === 'coffee') ? c : 'other';
+      bycat[key] = (bycat[key]||0) + t.amount;
+    }
   });
 
+  const totalItem = bycat.flower + bycat.coffee + bycat.other;
+
   const catDef = [
-    { key:'flower', label:'Flower', color:'var(--pink)' },
-    { key:'coffee', label:'Coffee', color:'#111' },
-    { key:'mixed',  label:'Mixed',  color:'var(--pink2)' },
-    { key:'other',  label:'Other',  color:'#aaa' },
+    { key:'flower', label:'🌸 Flower', color:'var(--pink)' },
+    { key:'coffee', label:'☕ Coffee', color:'#111' },
+    { key:'other',  label:'📦 未分類', color:'#aaa' },
   ];
 
   const catRows = catDef
     .filter(d => bycat[d.key] > 0)
     .map(d => {
-      const pct = total > 0 ? bycat[d.key]/total*100 : 0;
+      const pct = totalItem > 0 ? bycat[d.key]/totalItem*100 : 0;
       return `<div class="sq-row">
         <span class="sq-lbl" style="color:${d.color}">${d.label}</span>
         <div class="sq-bar-wrap"><div class="sq-bar" style="width:${pct.toFixed(0)}%;background:${d.color}"></div></div>
@@ -1079,13 +1099,13 @@ function renderSquareBreakdown(mt) {
       </div>`;
     }).join('');
 
-  const cashPct  = total > 0 ? byPay.cash/total*100 : 0;
-  const otherPct = total > 0 ? byPay.other/total*100 : 0;
+  const cashPct  = totalTx > 0 ? byPay.cash/totalTx*100 : 0;
+  const otherPct = totalTx > 0 ? byPay.other/totalTx*100 : 0;
 
   el.innerHTML = `
     <p class="ctitle">■ Square 売上内訳</p>
 
-    <div style="font-size:11px;font-weight:700;color:var(--sub);margin-bottom:8px;letter-spacing:.4px">CATEGORY</div>
+    <div style="font-size:11px;font-weight:700;color:var(--sub);margin-bottom:8px;letter-spacing:.4px">CATEGORY（アイテム単位）</div>
     ${catRows || '<p style="font-size:12px;color:var(--sub)">カテゴリデータなし（再同期すると表示されます）</p>'}
 
     <div style="font-size:11px;font-weight:700;color:var(--sub);margin:14px 0 8px;letter-spacing:.4px">PAYMENT METHOD</div>
@@ -1102,22 +1122,20 @@ function renderSquareBreakdown(mt) {
 
     <div class="sq-grid">
       <div class="sq-cell">
-        <div class="sq-cell-lbl">Flower 売上</div>
+        <div class="sq-cell-lbl">🌸 Flower 売上</div>
         <div class="sq-cell-val" style="color:var(--pink)">${yen(bycat.flower)}</div>
-        <div style="font-size:11px;color:var(--sub)">${byCatCount.flower}件</div>
       </div>
       <div class="sq-cell">
-        <div class="sq-cell-lbl">Coffee 売上</div>
+        <div class="sq-cell-lbl">☕ Coffee 売上</div>
         <div class="sq-cell-val" style="color:#111">${yen(bycat.coffee)}</div>
-        <div style="font-size:11px;color:var(--sub)">${byCatCount.coffee}件</div>
       </div>
       <div class="sq-cell">
-        <div class="sq-cell-lbl">現金売上</div>
+        <div class="sq-cell-lbl">💵 現金売上</div>
         <div class="sq-cell-val">${yen(byPay.cash)}</div>
         <div style="font-size:11px;color:var(--sub)">${byPayCount.cash}件</div>
       </div>
       <div class="sq-cell">
-        <div class="sq-cell-lbl">カード・電子マネー</div>
+        <div class="sq-cell-lbl">💳 カード・電子マネー</div>
         <div class="sq-cell-val" style="color:var(--pink)">${yen(byPay.other)}</div>
         <div style="font-size:11px;color:var(--sub)">${byPayCount.other}件</div>
       </div>
@@ -1244,6 +1262,90 @@ function resetAll() {
 //  SQUARE 自動同期
 // ═══════════════════════════════════════════════
 const SQ_JSON_URL = './data/square_data.json';  // GitHub Pages でのパス
+
+// ── 花き農協 スプレッドシート 自動同期 ────────────────
+async function syncHanakiSheet() {
+  const btn = document.getElementById('hanakiSyncBtn');
+  if (btn) { btn.textContent = '取得中…'; btn.disabled = true; }
+
+  const reset = () => {
+    if (btn) { btn.textContent = '🔄 スプレッドシートから取得'; btn.disabled = false; }
+  };
+
+  try {
+    const result = await new Promise((resolve, reject) => {
+      Papa.parse(HANAKI_SHEET_URL, {
+        download: true,
+        header: false,
+        skipEmptyLines: true,
+        complete: resolve,
+        error: reject,
+      });
+    });
+
+    const rows = result.data;
+    if (!rows || rows.length < 2) {
+      toast('⚠ データが見つかりません。シートを「リンクを知っている全員が閲覧可」に設定してください');
+      reset(); return;
+    }
+
+    const headers = rows[0].map(h => String(h).trim());
+    const cols    = detectCols(headers);
+
+    // デバッグ用: ヘッダーをコンソールに出力
+    console.log('[花き農協] ヘッダー:', headers);
+    console.log('[花き農協] 検出カラム:', cols);
+
+    let added = 0, skip = 0;
+    for (let i = 1; i < rows.length; i++) {
+      const row = rows[i];
+      if (!row || !row.length) continue;
+
+      const dateStr = normalizeDate(cols.date >= 0 ? row[cols.date] : '');
+      if (!dateStr) { skip++; continue; }
+
+      // 金額: 支出列 / 収支分離列 / 一般金額列
+      let finalAmt = 0;
+      if (cols.pay >= 0 && cols.dep >= 0) {
+        const pay = parseAmt(row[cols.pay]);
+        const dep = parseAmt(row[cols.dep]);
+        if      (pay > 0) finalAmt = -pay;
+        else if (dep > 0) finalAmt = -dep; // 仕入れなので支出
+        else { skip++; continue; }
+      } else if (cols.amount >= 0) {
+        const raw = parseAmt(row[cols.amount]);
+        if (!raw) { skip++; continue; }
+        finalAmt = -Math.abs(raw); // 仕入れは常に支出
+      } else { skip++; continue; }
+
+      const desc = (cols.desc >= 0 ? row[cols.desc] : '') || '花き農協仕入れ';
+
+      // 重複チェック（日付＋金額＋摘要＋ソース）
+      const dup = txs.some(t =>
+        t.date === dateStr && t.amount === finalAmt &&
+        t.description === desc.slice(0,60) && t.source === '花き農協'
+      );
+      if (dup) { skip++; continue; }
+
+      txs.push({
+        id:          Date.now() + '_hs_' + i + '_' + Math.random().toString(36).slice(2,5),
+        date:        dateStr,
+        category:    '仕入れ',
+        description: desc.slice(0, 60),
+        source:      '花き農協',
+        amount:      finalAmt,
+      });
+      added++;
+    }
+
+    save(); refreshAll();
+    toast(`✓ ${added}件 取り込みました${skip ? '（' + skip + '件スキップ）' : ''}（花き農協スプレッドシート）`);
+  } catch (e) {
+    console.error('[花き農協 sync]', e);
+    toast('⚠ 取得失敗 — スプレッドシートの共有設定を「リンクを知っている全員が閲覧可」にしてください');
+  }
+  reset();
+}
 
 async function squareSync(showToastOnNoNew = false) {
   const btn = document.getElementById('sqSyncBtn');
