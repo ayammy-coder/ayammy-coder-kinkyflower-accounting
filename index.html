@@ -65,6 +65,7 @@ html,body{height:100%;font-family:-apple-system,'Hiragino Sans','Yu Gothic UI',s
 .txico.bk{background:#d8d8d8}
 .txico.pc{background:#ebebeb}
 .txico.mf{background:var(--pink3);font-size:11px;font-weight:900;color:var(--pink)}
+.txico.bt{background:#ddeeff}
 .txinfo{flex:1;min-width:0}
 .txdesc{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .txmeta{font-size:11px;color:var(--sub);margin-top:2px}
@@ -149,6 +150,18 @@ html,body{height:100%;font-family:-apple-system,'Hiragino Sans','Yu Gothic UI',s
 .seclink{font-size:13px;color:var(--pink);cursor:pointer;font-weight:700}
 /* ── Scrollbar hide ── */
 .main::-webkit-scrollbar{display:none}
+/* ── Square breakdown ── */
+.sq-row{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border)}
+.sq-row:last-child{border-bottom:none}
+.sq-bar-wrap{flex:1;margin:0 10px;height:6px;background:var(--bg);border-radius:3px;overflow:hidden}
+.sq-bar{height:100%;border-radius:3px;transition:width .5s}
+.sq-lbl{font-size:13px;font-weight:700;min-width:56px}
+.sq-amt{font-size:13px;font-weight:800;text-align:right;min-width:80px}
+.sq-badge{font-size:10px;font-weight:800;padding:2px 7px;border-radius:10px;margin-left:6px}
+.sq-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.sq-cell{background:var(--bg);border-radius:10px;padding:10px}
+.sq-cell-lbl{font-size:11px;color:var(--sub);margin-bottom:3px}
+.sq-cell-val{font-size:17px;font-weight:800}
 </style>
 </head>
 <body>
@@ -249,6 +262,7 @@ html,body{height:100%;font-family:-apple-system,'Hiragino Sans','Yu Gothic UI',s
             <option value="小口現金">💵 小口現金</option>
             <option value="熊本銀行">🏦 熊本銀行</option>
             <option value="Square">💳 Square</option>
+            <option value="銀行振込">🏧 銀行振込</option>
             <option value="花き農協">🌿 花き農協</option>
           </select>
         </div>
@@ -335,6 +349,7 @@ html,body{height:100%;font-family:-apple-system,'Hiragino Sans','Yu Gothic UI',s
       <button class="fchip" onclick="setFilter('花き農協',this)">🌿 仕入れ</button>
       <button class="fchip" onclick="setFilter('熊本銀行',this)">🏦 引き落とし</button>
       <button class="fchip" onclick="setFilter('小口現金',this)">💵 小口現金</button>
+      <button class="fchip" onclick="setFilter('銀行振込',this)">🏧 銀行振込</button>
     </div>
     <div class="card" id="txList"></div>
   </div>
@@ -349,6 +364,7 @@ html,body{height:100%;font-family:-apple-system,'Hiragino Sans','Yu Gothic UI',s
     <div class="card" id="rpMain"></div>
     <div class="card" id="rpCat"></div>
     <div class="card" id="rpMargin"></div>
+    <div class="card" id="rpSquare" style="display:none"></div>
     <button class="btn btn-s" onclick="exportCSV()">⬇ この月のCSVを書き出す</button>
   </div>
 
@@ -509,8 +525,8 @@ function switchSub(name) {
 // ═══════════════════════════════════════════════
 //  SOURCE → ICON/CLASS
 // ═══════════════════════════════════════════════
-const SRC_ICO = { 'Square':'💳','花き農協':'🌿','熊本銀行':'🏦','小口現金':'💵','MoneyForward':'MF' };
-const SRC_CLS = { 'Square':'sq','花き農協':'nk','熊本銀行':'bk','小口現金':'pc','MoneyForward':'mf' };
+const SRC_ICO = { 'Square':'💳','花き農協':'🌿','熊本銀行':'🏦','小口現金':'💵','MoneyForward':'MF','銀行振込':'🏧' };
+const SRC_CLS = { 'Square':'sq','花き農協':'nk','熊本銀行':'bk','小口現金':'pc','MoneyForward':'mf','銀行振込':'bt' };
 const CAT_ICO = { '売上':'💐','仕入れ':'🌱','資材・梱包':'📦','交通費':'🚗',
   '水道光熱費':'💡','通信費':'📱','広告・PR':'📢','消耗品':'🔧','その他':'📝' };
 
@@ -949,25 +965,29 @@ function confirmImport() {
 function renderReport() {
   const mt = monthTxs();
   const lbl = monthLabel(curMonth);
-  let sq=0, nk=0, bk=0, pc=0;
+  let sq=0, bt=0, nk=0, bk=0, pc=0;
   const cats = {};
   mt.forEach(t => {
     if(t.source==='Square') sq += t.amount;
+    else if(t.source==='銀行振込') bt += t.amount;
     else if(t.source==='花き農協') nk += Math.abs(t.amount);
     else if(t.source==='熊本銀行') bk += Math.abs(t.amount);
     else pc += Math.abs(t.amount);
     if(t.amount<0) cats[t.category||'その他'] = (cats[t.category||'その他']||0)+Math.abs(t.amount);
   });
+  const totalIncome = sq + bt;
   const totalExp = nk+bk+pc;
-  const profit = sq - totalExp;
-  const marg = sq>0 ? profit/sq*100 : 0;
+  const profit = totalIncome - totalExp;
+  const marg = totalIncome>0 ? profit/totalIncome*100 : 0;
   const mc = marg>=20?'var(--pink)':marg>=10?'var(--pink2)':'#111';
 
   document.getElementById('rpMain').innerHTML = `
     <p class="ctitle">損益計算書　${lbl}</p>
     <table class="rtbl">
       <tr><th>項目</th><th>金額</th></tr>
-      <tr><td>💐 売上（Square）</td><td style="color:var(--pink);font-weight:700">+${yen(sq)}</td></tr>
+      <tr><td>💳 売上（Square）</td><td style="color:var(--pink);font-weight:700">+${yen(sq)}</td></tr>
+      ${bt>0?`<tr><td>🏧 売上（銀行振込）</td><td style="color:var(--pink);font-weight:700">+${yen(bt)}</td></tr>`:''}
+      ${bt>0?`<tr class="trow"><td>売上合計</td><td style="color:var(--pink);font-weight:700">+${yen(totalIncome)}</td></tr>`:''}
       <tr class="sep"><td colspan="2">▼ 支出</td></tr>
       <tr><td>🌿 仕入れ（花き農協）</td><td style="color:#111">−${yen(nk)}</td></tr>
       <tr><td>🏦 引き落とし（熊本銀行）</td><td style="color:#111">−${yen(bk)}</td></tr>
@@ -1004,11 +1024,102 @@ function renderReport() {
     <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px">
       <div style="background:var(--bg);border-radius:8px;padding:10px">
         <div style="color:var(--sub)">仕入れ比率</div>
-        <div style="font-weight:800;font-size:15px">${sq>0?(nk/sq*100).toFixed(1):0}%</div>
+        <div style="font-weight:800;font-size:15px">${totalIncome>0?(nk/totalIncome*100).toFixed(1):0}%</div>
       </div>
       <div style="background:var(--bg);border-radius:8px;padding:10px">
         <div style="color:var(--sub)">取引件数</div>
         <div style="font-weight:800;font-size:15px">${mt.length}件</div>
+      </div>
+    </div>`;
+
+  // ── Square 内訳（カテゴリ × 決済方法）────────────────
+  renderSquareBreakdown(mt);
+}
+
+function renderSquareBreakdown(mt) {
+  const el = document.getElementById('rpSquare');
+  if (!el) return;
+
+  const sqTxs = mt.filter(t => t.source === 'Square' && t.amount > 0);
+  if (sqTxs.length === 0) { el.style.display = 'none'; return; }
+  el.style.display = 'block';
+
+  // カテゴリ別集計
+  const bycat = { coffee:0, flower:0, mixed:0, other:0 };
+  const byPay = { cash:0, other:0 };
+  const byCatCount = { coffee:0, flower:0, mixed:0, other:0 };
+  const byPayCount = { cash:0, other:0 };
+  let total = 0;
+
+  sqTxs.forEach(t => {
+    const c = t.sq_category || 'other';
+    const p = t.payment_method || 'other';
+    bycat[c] = (bycat[c]||0) + t.amount;
+    byPay[p] = (byPay[p]||0) + t.amount;
+    byCatCount[c] = (byCatCount[c]||0) + 1;
+    byPayCount[p] = (byPayCount[p]||0) + 1;
+    total += t.amount;
+  });
+
+  const catDef = [
+    { key:'flower', label:'Flower', color:'var(--pink)' },
+    { key:'coffee', label:'Coffee', color:'#111' },
+    { key:'mixed',  label:'Mixed',  color:'var(--pink2)' },
+    { key:'other',  label:'Other',  color:'#aaa' },
+  ];
+
+  const catRows = catDef
+    .filter(d => bycat[d.key] > 0)
+    .map(d => {
+      const pct = total > 0 ? bycat[d.key]/total*100 : 0;
+      return `<div class="sq-row">
+        <span class="sq-lbl" style="color:${d.color}">${d.label}</span>
+        <div class="sq-bar-wrap"><div class="sq-bar" style="width:${pct.toFixed(0)}%;background:${d.color}"></div></div>
+        <span class="sq-amt">${yen(bycat[d.key])}<span style="font-size:10px;color:var(--sub);font-weight:500;margin-left:3px">${pct.toFixed(0)}%</span></span>
+      </div>`;
+    }).join('');
+
+  const cashPct  = total > 0 ? byPay.cash/total*100 : 0;
+  const otherPct = total > 0 ? byPay.other/total*100 : 0;
+
+  el.innerHTML = `
+    <p class="ctitle">■ Square 売上内訳</p>
+
+    <div style="font-size:11px;font-weight:700;color:var(--sub);margin-bottom:8px;letter-spacing:.4px">CATEGORY</div>
+    ${catRows || '<p style="font-size:12px;color:var(--sub)">カテゴリデータなし（再同期すると表示されます）</p>'}
+
+    <div style="font-size:11px;font-weight:700;color:var(--sub);margin:14px 0 8px;letter-spacing:.4px">PAYMENT METHOD</div>
+    <div class="sq-row">
+      <span class="sq-lbl">現金</span>
+      <div class="sq-bar-wrap"><div class="sq-bar" style="width:${cashPct.toFixed(0)}%;background:#111"></div></div>
+      <span class="sq-amt">${yen(byPay.cash)}<span style="font-size:10px;color:var(--sub);font-weight:500;margin-left:3px">${cashPct.toFixed(0)}%</span></span>
+    </div>
+    <div class="sq-row">
+      <span class="sq-lbl">カード等</span>
+      <div class="sq-bar-wrap"><div class="sq-bar" style="width:${otherPct.toFixed(0)}%;background:var(--pink)"></div></div>
+      <span class="sq-amt">${yen(byPay.other)}<span style="font-size:10px;color:var(--sub);font-weight:500;margin-left:3px">${otherPct.toFixed(0)}%</span></span>
+    </div>
+
+    <div class="sq-grid">
+      <div class="sq-cell">
+        <div class="sq-cell-lbl">Flower 売上</div>
+        <div class="sq-cell-val" style="color:var(--pink)">${yen(bycat.flower)}</div>
+        <div style="font-size:11px;color:var(--sub)">${byCatCount.flower}件</div>
+      </div>
+      <div class="sq-cell">
+        <div class="sq-cell-lbl">Coffee 売上</div>
+        <div class="sq-cell-val" style="color:#111">${yen(bycat.coffee)}</div>
+        <div style="font-size:11px;color:var(--sub)">${byCatCount.coffee}件</div>
+      </div>
+      <div class="sq-cell">
+        <div class="sq-cell-lbl">現金売上</div>
+        <div class="sq-cell-val">${yen(byPay.cash)}</div>
+        <div style="font-size:11px;color:var(--sub)">${byPayCount.cash}件</div>
+      </div>
+      <div class="sq-cell">
+        <div class="sq-cell-lbl">カード・電子マネー</div>
+        <div class="sq-cell-val" style="color:var(--pink)">${yen(byPay.other)}</div>
+        <div style="font-size:11px;color:var(--sub)">${byPayCount.other}件</div>
       </div>
     </div>`;
 }
@@ -1159,13 +1270,16 @@ async function squareSync(showToastOnNoNew = false) {
     for (const sq of data.transactions) {
       if (!sq.squareId || existingIds.has(sq.squareId)) continue;
       txs.push({
-        id:          'sq_' + sq.squareId,
-        squareId:    sq.squareId,
-        date:        sq.date,
-        amount:      sq.amount,
-        category:    sq.category || '売上',
-        description: sq.description || 'Square売上',
-        source:      'Square'
+        id:             'sq_' + sq.squareId,
+        squareId:       sq.squareId,
+        date:           sq.date,
+        amount:         sq.amount,
+        category:       sq.category || '売上',
+        sq_category:    sq.sq_category  || 'other',   // coffee/flower/mixed/other
+        payment_method: sq.payment_method || 'other', // cash/other
+        items:          sq.items || [],
+        description:    sq.description || 'Square売上',
+        source:         'Square'
       });
       existingIds.add(sq.squareId);
       added++;
