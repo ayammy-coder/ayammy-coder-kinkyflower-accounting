@@ -1,0 +1,42 @@
+name: Square 自動同期
+
+on:
+  schedule:
+    - cron: '0 16 * * *'   # 毎日 日本時間 午前1時（UTC 16:00）
+  workflow_dispatch:         # 手動実行ボタンも有効
+
+permissions:
+  contents: write            # data/square_data.json を push するために必要
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: リポジトリをチェックアウト
+        uses: actions/checkout@v4
+
+      - name: Python セットアップ
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: 依存パッケージをインストール
+        run: pip install requests
+
+      - name: Square データを取得
+        env:
+          SQUARE_ACCESS_TOKEN: ${{ secrets.SQUARE_ACCESS_TOKEN }}
+        run: python sync_square.py
+
+      - name: 変更をコミット & プッシュ
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/square_data.json
+          if git diff --staged --quiet; then
+            echo "新しいデータなし、スキップ"
+          else
+            git commit -m "Square 自動同期 $(TZ=Asia/Tokyo date '+%Y-%m-%d %H:%M JST')"
+            git push
+          fi
