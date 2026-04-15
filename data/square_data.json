@@ -1,7 +1,25 @@
 {
-  "updated_at": "2026-04-15T04:56:02.388118+09:00",
-  "count": 1595,
+  "updated_at": "2026-04-16T04:56:13.973929+09:00",
+  "count": 1596,
   "transactions": [
+    {
+      "squareId": "vnoQEiTHVqsE11FMTa3JIlswnIGZY",
+      "date": "2026-04-15",
+      "amount": 165,
+      "category": "売上",
+      "sq_category": "flower",
+      "sq_breakdown": {
+        "flower": 165,
+        "coffee": 0,
+        "other": 0
+      },
+      "payment_method": "other",
+      "items": [
+        "お花"
+      ],
+      "description": "お花",
+      "source": "Square"
+    },
     {
       "squareId": "fZJC2fVYIeBU18TMK20kWHfYeI6YY",
       "date": "2026-04-14",
