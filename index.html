@@ -1264,12 +1264,12 @@ function resetAll() {
 const SQ_JSON_URL = './data/square_data.json';  // GitHub Pages でのパス
 
 // ── 花き農協 スプレッドシート 自動同期 ────────────────
+// 列構成: 日付(0) / 仕入先(1) / 金額(円)(2) / 品目(3) / メモ(4) / 入力日(5)
 async function syncHanakiSheet() {
   const btn = document.getElementById('hanakiSyncBtn');
   if (btn) { btn.textContent = '取得中…'; btn.disabled = true; }
-
   const reset = () => {
-    if (btn) { btn.textContent = '🔄 スプレッドシートから取得'; btn.disabled = false; }
+    if (btn) { btn.textContent = '🔄 自動取得'; btn.disabled = false; }
   };
 
   try {
@@ -1285,53 +1285,59 @@ async function syncHanakiSheet() {
 
     const rows = result.data;
     if (!rows || rows.length < 2) {
-      toast('⚠ データが見つかりません。シートを「リンクを知っている全員が閲覧可」に設定してください');
+      toast('⚠ データなし。スプレッドシートを「リンクを知っている全員が閲覧可」にしてください');
       reset(); return;
     }
 
+    // ヘッダー行でカラム位置を自動確定（固定列番号にフォールバック）
     const headers = rows[0].map(h => String(h).trim());
-    const cols    = detectCols(headers);
-
-    // デバッグ用: ヘッダーをコンソールに出力
-    console.log('[花き農協] ヘッダー:', headers);
-    console.log('[花き農協] 検出カラム:', cols);
+    const findCol = (...pats) => {
+      for (const p of pats) {
+        const i = headers.findIndex(h => h.toLowerCase().includes(p.toLowerCase()));
+        if (i >= 0) return i;
+      }
+      return -1;
+    };
+    // 列マッピング（シート列名に合わせた専用マッピング）
+    const COL = {
+      date:   findCol('日付') >= 0       ? findCol('日付')       : 0,
+      vendor: findCol('仕入先') >= 0     ? findCol('仕入先')     : 1,
+      amount: findCol('金額') >= 0       ? findCol('金額')       : 2,
+      item:   findCol('品目') >= 0       ? findCol('品目')       : 3,
+      memo:   findCol('メモ') >= 0       ? findCol('メモ')       : 4,
+    };
 
     let added = 0, skip = 0;
     for (let i = 1; i < rows.length; i++) {
       const row = rows[i];
       if (!row || !row.length) continue;
 
-      const dateStr = normalizeDate(cols.date >= 0 ? row[cols.date] : '');
+      const dateStr = normalizeDate(row[COL.date] || '');
       if (!dateStr) { skip++; continue; }
 
-      // 金額: 支出列 / 収支分離列 / 一般金額列
-      let finalAmt = 0;
-      if (cols.pay >= 0 && cols.dep >= 0) {
-        const pay = parseAmt(row[cols.pay]);
-        const dep = parseAmt(row[cols.dep]);
-        if      (pay > 0) finalAmt = -pay;
-        else if (dep > 0) finalAmt = -dep; // 仕入れなので支出
-        else { skip++; continue; }
-      } else if (cols.amount >= 0) {
-        const raw = parseAmt(row[cols.amount]);
-        if (!raw) { skip++; continue; }
-        finalAmt = -Math.abs(raw); // 仕入れは常に支出
-      } else { skip++; continue; }
+      const raw = parseAmt(row[COL.amount]);
+      if (!raw) { skip++; continue; }
+      const finalAmt = -Math.abs(raw); // 仕入れは常にマイナス（支出）
 
-      const desc = (cols.desc >= 0 ? row[cols.desc] : '') || '花き農協仕入れ';
+      // 摘要: 品目 + 仕入先 + メモを組み合わせ
+      const item   = (row[COL.item]   || '').trim();
+      const vendor = (row[COL.vendor] || '').trim();
+      const memo   = (row[COL.memo]   || '').trim();
+      const parts  = [item, vendor, memo].filter(Boolean);
+      const desc   = (parts.join(' / ') || '花き農協仕入れ').slice(0, 60);
 
-      // 重複チェック（日付＋金額＋摘要＋ソース）
+      // 重複チェック（日付＋金額＋摘要）
       const dup = txs.some(t =>
         t.date === dateStr && t.amount === finalAmt &&
-        t.description === desc.slice(0,60) && t.source === '花き農協'
+        t.description === desc && t.source === '花き農協'
       );
       if (dup) { skip++; continue; }
 
       txs.push({
-        id:          Date.now() + '_hs_' + i + '_' + Math.random().toString(36).slice(2,5),
+        id:          Date.now() + '_hs' + i + '_' + Math.random().toString(36).slice(2,5),
         date:        dateStr,
         category:    '仕入れ',
-        description: desc.slice(0, 60),
+        description: desc,
         source:      '花き農協',
         amount:      finalAmt,
       });
