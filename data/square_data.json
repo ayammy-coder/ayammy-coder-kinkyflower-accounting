@@ -1,7 +1,62 @@
 {
-  "updated_at": "2026-04-26T03:00:09.146441+09:00",
+  "updated_at": "2026-04-27T03:03:27.320377+09:00",
   "count": 1572,
   "transactions": [
+    {
+      "squareId": "RIi52rbDNdH62BI9W4deL1JKHGbZY",
+      "date": "2026-04-26",
+      "amount": 1000,
+      "category": "売上",
+      "sq_category": "other",
+      "sq_breakdown": {
+        "flower": 0,
+        "coffee": 0,
+        "other": 1000
+      },
+      "payment_method": "cash",
+      "items": [
+        "コーラ",
+        "GRAPE JUICE"
+      ],
+      "description": "コーラ、GRAPE JUICE",
+      "source": "Square"
+    },
+    {
+      "squareId": "VErNHauE0ad0O9cJnqSjYjV3SSBZY",
+      "date": "2026-04-26",
+      "amount": 660,
+      "category": "売上",
+      "sq_category": "flower",
+      "sq_breakdown": {
+        "flower": 660,
+        "coffee": 0,
+        "other": 0
+      },
+      "payment_method": "cash",
+      "items": [
+        "お花"
+      ],
+      "description": "お花",
+      "source": "Square"
+    },
+    {
+      "squareId": "taSE03GxCoZajDT8qTq2cpRAfPDZY",
+      "date": "2026-04-26",
+      "amount": 1650,
+      "category": "売上",
+      "sq_category": "other",
+      "sq_breakdown": {
+        "flower": 0,
+        "coffee": 0,
+        "other": 1650
+      },
+      "payment_method": "cash",
+      "items": [
+        "本日のブーケ"
+      ],
+      "description": "本日のブーケ",
+      "source": "Square"
+    },
     {
       "squareId": "nbiBrvyp1v0QhxI1mlVlixmQ9rUZY",
       "date": "2026-04-25",
@@ -28478,60 +28533,6 @@
         "コーヒー店内"
       ],
       "description": "コーヒー店内",
-      "source": "Square"
-    },
-    {
-      "squareId": "jjrLLnf1AGGWrIPobjkpGlXST5WZY",
-      "date": "2025-10-28",
-      "amount": 1000,
-      "category": "売上",
-      "sq_category": "other",
-      "sq_breakdown": {
-        "flower": 0,
-        "coffee": 0,
-        "other": 1000
-      },
-      "payment_method": "cash",
-      "items": [
-        "リース"
-      ],
-      "description": "リース",
-      "source": "Square"
-    },
-    {
-      "squareId": "FsP9UaYCQOm0g3fB7CXhd3qG78OZY",
-      "date": "2025-10-28",
-      "amount": 1000,
-      "category": "売上",
-      "sq_category": "other",
-      "sq_breakdown": {
-        "flower": 0,
-        "coffee": 0,
-        "other": 1000
-      },
-      "payment_method": "cash",
-      "items": [
-        "店内飲食"
-      ],
-      "description": "店内飲食",
-      "source": "Square"
-    },
-    {
-      "squareId": "TRe5O03oavoryDGbuMT7TZHBYyCZY",
-      "date": "2025-10-28",
-      "amount": 500,
-      "category": "売上",
-      "sq_category": "coffee",
-      "sq_breakdown": {
-        "flower": 0,
-        "coffee": 500,
-        "other": 0
-      },
-      "payment_method": "cash",
-      "items": [
-        "コーヒー持ち帰り"
-      ],
-      "description": "コーヒー持ち帰り",
       "source": "Square"
     }
   ]
