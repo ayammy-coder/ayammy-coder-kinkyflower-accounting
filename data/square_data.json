@@ -1,7 +1,135 @@
 {
-  "updated_at": "2026-05-16T02:25:29.520360+09:00",
-  "count": 1666,
+  "updated_at": "2026-05-17T01:56:26.803348+09:00",
+  "count": 1665,
   "transactions": [
+    {
+      "squareId": "5IkLcBAk1QYoYbyhir32JaT9PVNZY",
+      "date": "2026-05-16",
+      "amount": 4400,
+      "category": "売上",
+      "sq_category": "flower",
+      "sq_breakdown": {
+        "flower": 4400,
+        "coffee": 0,
+        "other": 0
+      },
+      "payment_method": "other",
+      "items": [
+        "お花"
+      ],
+      "description": "お花",
+      "source": "Square"
+    },
+    {
+      "squareId": "J0iH7PhAUdYkvTPZTdN7pAdUHwAZY",
+      "date": "2026-05-16",
+      "amount": 2860,
+      "category": "売上",
+      "sq_category": "flower",
+      "sq_breakdown": {
+        "flower": 2860,
+        "coffee": 0,
+        "other": 0
+      },
+      "payment_method": "cash",
+      "items": [
+        "お花"
+      ],
+      "description": "お花",
+      "source": "Square"
+    },
+    {
+      "squareId": "zp8ADQ5RjNVEwj9UCSTJJsjiBwYZY",
+      "date": "2026-05-16",
+      "amount": 3300,
+      "category": "売上",
+      "sq_category": "flower",
+      "sq_breakdown": {
+        "flower": 3300,
+        "coffee": 0,
+        "other": 0
+      },
+      "payment_method": "cash",
+      "items": [
+        "お花"
+      ],
+      "description": "お花",
+      "source": "Square"
+    },
+    {
+      "squareId": "TpqfBSsvCWNW283Z9P8IatnBHZ6YY",
+      "date": "2026-05-16",
+      "amount": 110,
+      "category": "売上",
+      "sq_category": "other",
+      "sq_breakdown": {
+        "flower": 0,
+        "coffee": 0,
+        "other": 110
+      },
+      "payment_method": "cash",
+      "items": [
+        "送料"
+      ],
+      "description": "送料",
+      "source": "Square"
+    },
+    {
+      "squareId": "B6nPzzeHVfSSL9DQa60yTAnTcaAZY",
+      "date": "2026-05-16",
+      "amount": 1650,
+      "category": "売上",
+      "sq_category": "flower",
+      "sq_breakdown": {
+        "flower": 1650,
+        "coffee": 0,
+        "other": 0
+      },
+      "payment_method": "other",
+      "items": [
+        "花器"
+      ],
+      "description": "花器",
+      "source": "Square"
+    },
+    {
+      "squareId": "paxlbGAeEJEwNzOI5miyoJPcE2FZY",
+      "date": "2026-05-16",
+      "amount": 10210,
+      "category": "売上",
+      "sq_category": "flower",
+      "sq_breakdown": {
+        "flower": 8000,
+        "coffee": 500,
+        "other": 1710
+      },
+      "payment_method": "other",
+      "items": [
+        "送料",
+        "TODAY'S COFFEE",
+        "お花"
+      ],
+      "description": "送料、TODAY'S COFFEE",
+      "source": "Square"
+    },
+    {
+      "squareId": "d097Tu1XfeeiYSaoy3S2rkNOr9JZY",
+      "date": "2026-05-16",
+      "amount": 1000,
+      "category": "売上",
+      "sq_category": "other",
+      "sq_breakdown": {
+        "flower": 0,
+        "coffee": 0,
+        "other": 1000
+      },
+      "payment_method": "other",
+      "items": [
+        "箱CACAOCAT"
+      ],
+      "description": "箱CACAOCAT",
+      "source": "Square"
+    },
     {
       "squareId": "xqv9HTLap9cYBK9ucKqHZMTlVVIZY",
       "date": "2026-05-15",
@@ -30093,152 +30221,6 @@
         "コーヒー¥500"
       ],
       "description": "コーヒー¥500",
-      "source": "Square"
-    },
-    {
-      "squareId": "P5pW9Zy6dY8BREQ0MeVxHflKatPZY",
-      "date": "2025-11-17",
-      "amount": 100,
-      "category": "売上",
-      "sq_category": "coffee",
-      "sq_breakdown": {
-        "flower": 0,
-        "coffee": 100,
-        "other": 0
-      },
-      "payment_method": "cash",
-      "items": [
-        "スタッフコーヒー"
-      ],
-      "description": "スタッフコーヒー",
-      "source": "Square"
-    },
-    {
-      "squareId": "fn0I62cy9XIFRVinPHkSF4PFK9LZY",
-      "date": "2025-11-17",
-      "amount": 100,
-      "category": "売上",
-      "sq_category": "coffee",
-      "sq_breakdown": {
-        "flower": 0,
-        "coffee": 100,
-        "other": 0
-      },
-      "payment_method": "cash",
-      "items": [
-        "スタッフコーヒー"
-      ],
-      "description": "スタッフコーヒー",
-      "source": "Square"
-    },
-    {
-      "squareId": "bRcr5rkngWdgrDFnAS1wagNBlPAZY",
-      "date": "2025-11-17",
-      "amount": 3430,
-      "category": "売上",
-      "sq_category": "flower",
-      "sq_breakdown": {
-        "flower": 3430,
-        "coffee": 0,
-        "other": 0
-      },
-      "payment_method": "other",
-      "items": [
-        "お花",
-        "お花",
-        "お花"
-      ],
-      "description": "お花、お花",
-      "source": "Square"
-    },
-    {
-      "squareId": "twVAQZOtCsGYuIHo2YBQKfAk5EFZY",
-      "date": "2025-11-17",
-      "amount": 1000,
-      "category": "売上",
-      "sq_category": "coffee",
-      "sq_breakdown": {
-        "flower": 0,
-        "coffee": 1000,
-        "other": 0
-      },
-      "payment_method": "cash",
-      "items": [
-        "コーヒー¥500"
-      ],
-      "description": "コーヒー¥500",
-      "source": "Square"
-    },
-    {
-      "squareId": "dgJKBsthawnNWAPtj9GrY16VYKQZY",
-      "date": "2025-11-17",
-      "amount": 500,
-      "category": "売上",
-      "sq_category": "coffee",
-      "sq_breakdown": {
-        "flower": 0,
-        "coffee": 500,
-        "other": 0
-      },
-      "payment_method": "cash",
-      "items": [
-        "コーヒー¥500"
-      ],
-      "description": "コーヒー¥500",
-      "source": "Square"
-    },
-    {
-      "squareId": "bXRaKSI1QEIyYc0X0kGt4oPcad9YY",
-      "date": "2025-11-17",
-      "amount": 500,
-      "category": "売上",
-      "sq_category": "coffee",
-      "sq_breakdown": {
-        "flower": 0,
-        "coffee": 500,
-        "other": 0
-      },
-      "payment_method": "cash",
-      "items": [
-        "コーヒー¥500"
-      ],
-      "description": "コーヒー¥500",
-      "source": "Square"
-    },
-    {
-      "squareId": "xkgx4v6qeayxzYObFfEL4bQfAOIZY",
-      "date": "2025-11-17",
-      "amount": 500,
-      "category": "売上",
-      "sq_category": "coffee",
-      "sq_breakdown": {
-        "flower": 0,
-        "coffee": 500,
-        "other": 0
-      },
-      "payment_method": "cash",
-      "items": [
-        "コーヒー¥500"
-      ],
-      "description": "コーヒー¥500",
-      "source": "Square"
-    },
-    {
-      "squareId": "NCeaXfxkAo3QCRtacOZw4zKVg1YZY",
-      "date": "2025-11-17",
-      "amount": 3300,
-      "category": "売上",
-      "sq_category": "flower",
-      "sq_breakdown": {
-        "flower": 3300,
-        "coffee": 0,
-        "other": 0
-      },
-      "payment_method": "other",
-      "items": [
-        "お花"
-      ],
-      "description": "お花",
       "source": "Square"
     }
   ]
