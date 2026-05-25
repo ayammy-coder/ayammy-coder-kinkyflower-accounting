@@ -1,7 +1,97 @@
 {
-  "updated_at": "2026-05-25T01:57:42.368363+09:00",
-  "count": 1642,
+  "updated_at": "2026-05-26T02:41:33.252061+09:00",
+  "count": 1643,
   "transactions": [
+    {
+      "squareId": "rNom4YbSLJlSg3oT6HhL1wgyO96YY",
+      "date": "2026-05-25",
+      "amount": 1210,
+      "category": "売上",
+      "sq_category": "flower",
+      "sq_breakdown": {
+        "flower": 1210,
+        "coffee": 0,
+        "other": 0
+      },
+      "payment_method": "cash",
+      "items": [
+        "お花"
+      ],
+      "description": "お花",
+      "source": "Square"
+    },
+    {
+      "squareId": "XtVaCrbghxoz9GL7Eqyag027Nd7YY",
+      "date": "2026-05-25",
+      "amount": 3200,
+      "category": "売上",
+      "sq_category": "other",
+      "sq_breakdown": {
+        "flower": 0,
+        "coffee": 0,
+        "other": 3200
+      },
+      "payment_method": "other",
+      "items": [
+        "缶CACAOCAT"
+      ],
+      "description": "缶CACAOCAT",
+      "source": "Square"
+    },
+    {
+      "squareId": "DvXu99sb1UI5obfpvKYhtTh1DEUZY",
+      "date": "2026-05-25",
+      "amount": 1100,
+      "category": "売上",
+      "sq_category": "other",
+      "sq_breakdown": {
+        "flower": 0,
+        "coffee": 0,
+        "other": 1100
+      },
+      "payment_method": "other",
+      "items": [
+        "観葉植物"
+      ],
+      "description": "観葉植物",
+      "source": "Square"
+    },
+    {
+      "squareId": "rd4o7aPclHzFqluVSKyPvqjujrBZY",
+      "date": "2026-05-25",
+      "amount": 4840,
+      "category": "売上",
+      "sq_category": "other",
+      "sq_breakdown": {
+        "flower": 0,
+        "coffee": 0,
+        "other": 6050
+      },
+      "payment_method": "other",
+      "items": [
+        "LOA THE OIL “CARE”"
+      ],
+      "description": "LOA THE OIL “CARE”",
+      "source": "Square"
+    },
+    {
+      "squareId": "9OcQL85ukgJwIK0HpZXYkLc8HXRZY",
+      "date": "2026-05-25",
+      "amount": 20000,
+      "category": "売上",
+      "sq_category": "flower",
+      "sq_breakdown": {
+        "flower": 20000,
+        "coffee": 0,
+        "other": 0
+      },
+      "payment_method": "cash",
+      "items": [
+        "お花"
+      ],
+      "description": "お花",
+      "source": "Square"
+    },
     {
       "squareId": "BEKSL2uyVXk95zJSsSPNP9YCYvdZY",
       "date": "2026-05-24",
@@ -29719,79 +29809,6 @@
         "観葉植物"
       ],
       "description": "観葉植物",
-      "source": "Square"
-    },
-    {
-      "squareId": "7XfBOJin3vpJ8uinsvyjFoYMfVTZY",
-      "date": "2025-11-26",
-      "amount": 500,
-      "category": "売上",
-      "sq_category": "coffee",
-      "sq_breakdown": {
-        "flower": 0,
-        "coffee": 500,
-        "other": 0
-      },
-      "payment_method": "cash",
-      "items": [
-        "TODAY'S COFFEE"
-      ],
-      "description": "TODAY'S COFFEE",
-      "source": "Square"
-    },
-    {
-      "squareId": "Z6To1Cjy7yz2UMhmtlpIicmuS8fZY",
-      "date": "2025-11-26",
-      "amount": 500,
-      "category": "売上",
-      "sq_category": "other",
-      "sq_breakdown": {
-        "flower": 0,
-        "coffee": 0,
-        "other": 500
-      },
-      "payment_method": "cash",
-      "items": [
-        "ジンジャーエール"
-      ],
-      "description": "ジンジャーエール",
-      "source": "Square"
-    },
-    {
-      "squareId": "N8ZPQGDBHpOwKDwPnO1AmhoWZ5RZY",
-      "date": "2025-11-26",
-      "amount": 2500,
-      "category": "売上",
-      "sq_category": "coffee",
-      "sq_breakdown": {
-        "flower": 0,
-        "coffee": 2000,
-        "other": 500
-      },
-      "payment_method": "other",
-      "items": [
-        "TODAY'S COFFEE",
-        "PERRIER ROSE"
-      ],
-      "description": "TODAY'S COFFEE、PERRIER ROSE",
-      "source": "Square"
-    },
-    {
-      "squareId": "5ehqrF9UdQThmNNxnsKaafP5M3ZZY",
-      "date": "2025-11-26",
-      "amount": 1000,
-      "category": "売上",
-      "sq_category": "coffee",
-      "sq_breakdown": {
-        "flower": 0,
-        "coffee": 1000,
-        "other": 0
-      },
-      "payment_method": "cash",
-      "items": [
-        "TODAY'S COFFEE"
-      ],
-      "description": "TODAY'S COFFEE",
       "source": "Square"
     }
   ]
