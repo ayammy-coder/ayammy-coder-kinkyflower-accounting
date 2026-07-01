@@ -1,7 +1,79 @@
 {
-  "updated_at": "2026-07-01T02:50:26.493363+09:00",
-  "count": 1577,
+  "updated_at": "2026-07-02T02:52:01.875604+09:00",
+  "count": 1581,
   "transactions": [
+    {
+      "squareId": "dOIydrg3XYlONoLBR134AzmyLUBZY",
+      "date": "2026-07-01",
+      "amount": 800,
+      "category": "売上",
+      "sq_category": "coffee",
+      "sq_breakdown": {
+        "flower": 0,
+        "coffee": 800,
+        "other": 0
+      },
+      "payment_method": "cash",
+      "items": [
+        "HAND DRIP COFFEE"
+      ],
+      "description": "HAND DRIP COFFEE",
+      "source": "Square"
+    },
+    {
+      "squareId": "10PLz3QS2EsarRFl2V8GckJSu4BZY",
+      "date": "2026-07-01",
+      "amount": 500,
+      "category": "売上",
+      "sq_category": "other",
+      "sq_breakdown": {
+        "flower": 0,
+        "coffee": 0,
+        "other": 500
+      },
+      "payment_method": "cash",
+      "items": [
+        "PERRIER PINA FIZZ"
+      ],
+      "description": "PERRIER PINA FIZZ",
+      "source": "Square"
+    },
+    {
+      "squareId": "JSLc7pZ3C8hj0CdZDZLnDDGWMMfZY",
+      "date": "2026-07-01",
+      "amount": 330,
+      "category": "売上",
+      "sq_category": "flower",
+      "sq_breakdown": {
+        "flower": 330,
+        "coffee": 0,
+        "other": 0
+      },
+      "payment_method": "cash",
+      "items": [
+        "お花"
+      ],
+      "description": "お花",
+      "source": "Square"
+    },
+    {
+      "squareId": "lcdwa4GU50DCqeBKb1SnRrRYmgPZY",
+      "date": "2026-07-01",
+      "amount": 500,
+      "category": "売上",
+      "sq_category": "coffee",
+      "sq_breakdown": {
+        "flower": 0,
+        "coffee": 500,
+        "other": 0
+      },
+      "payment_method": "cash",
+      "items": [
+        "TODAY'S COFFEE"
+      ],
+      "description": "TODAY'S COFFEE",
+      "source": "Square"
+    },
     {
       "squareId": "BCxcey6Vhk9Oq79Pdkft84b5yAHZY",
       "date": "2026-06-30",
