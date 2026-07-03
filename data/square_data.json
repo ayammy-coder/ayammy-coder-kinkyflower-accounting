@@ -1,7 +1,136 @@
 {
-  "updated_at": "2026-07-03T02:43:47.990699+09:00",
-  "count": 1589,
+  "updated_at": "2026-07-04T02:22:11.022359+09:00",
+  "count": 1596,
   "transactions": [
+    {
+      "squareId": "JqJfIpZyI9KDWeA7H26s59B3JXcZY",
+      "date": "2026-07-03",
+      "amount": 3450,
+      "category": "売上",
+      "sq_category": "flower",
+      "sq_breakdown": {
+        "flower": 2750,
+        "coffee": 0,
+        "other": 700
+      },
+      "payment_method": "other",
+      "items": [
+        "花器",
+        "赤酒チャイ",
+        "お花"
+      ],
+      "description": "花器、赤酒チャイ",
+      "source": "Square"
+    },
+    {
+      "squareId": "xGHc6Cn0fm9PJKjPhodsw2Wu9hcZY",
+      "date": "2026-07-03",
+      "amount": 2050,
+      "category": "売上",
+      "sq_category": "other",
+      "sq_breakdown": {
+        "flower": 0,
+        "coffee": 0,
+        "other": 2050
+      },
+      "payment_method": "other",
+      "items": [
+        "本日のブーケ",
+        "BANANA CAKE"
+      ],
+      "description": "本日のブーケ、BANANA CAKE",
+      "source": "Square"
+    },
+    {
+      "squareId": "PlHAGMiLwgLb1tBJ1Bj5vZ8WboNZY",
+      "date": "2026-07-03",
+      "amount": 660,
+      "category": "売上",
+      "sq_category": "flower",
+      "sq_breakdown": {
+        "flower": 660,
+        "coffee": 0,
+        "other": 0
+      },
+      "payment_method": "cash",
+      "items": [
+        "お花"
+      ],
+      "description": "お花",
+      "source": "Square"
+    },
+    {
+      "squareId": "lakWJBlsQknG9FlKHvL8o4BLJsOZY",
+      "date": "2026-07-03",
+      "amount": 3300,
+      "category": "売上",
+      "sq_category": "flower",
+      "sq_breakdown": {
+        "flower": 3300,
+        "coffee": 0,
+        "other": 0
+      },
+      "payment_method": "other",
+      "items": [
+        "お花"
+      ],
+      "description": "お花",
+      "source": "Square"
+    },
+    {
+      "squareId": "pK5XIkPlk4ojK341hUSvclXqqV7YY",
+      "date": "2026-07-03",
+      "amount": 330,
+      "category": "売上",
+      "sq_category": "flower",
+      "sq_breakdown": {
+        "flower": 330,
+        "coffee": 0,
+        "other": 0
+      },
+      "payment_method": "other",
+      "items": [
+        "お花"
+      ],
+      "description": "お花",
+      "source": "Square"
+    },
+    {
+      "squareId": "7ffLuOskYimSSh0SjrAzzoZESIYZY",
+      "date": "2026-07-03",
+      "amount": 220,
+      "category": "売上",
+      "sq_category": "flower",
+      "sq_breakdown": {
+        "flower": 220,
+        "coffee": 0,
+        "other": 0
+      },
+      "payment_method": "cash",
+      "items": [
+        "お花"
+      ],
+      "description": "お花",
+      "source": "Square"
+    },
+    {
+      "squareId": "nPCIf4KoNgYQAooi9HCH8woOKqAZY",
+      "date": "2026-07-03",
+      "amount": 2750,
+      "category": "売上",
+      "sq_category": "flower",
+      "sq_breakdown": {
+        "flower": 2750,
+        "coffee": 0,
+        "other": 0
+      },
+      "payment_method": "cash",
+      "items": [
+        "お花"
+      ],
+      "description": "お花",
+      "source": "Square"
+    },
     {
       "squareId": "vXcuoInQoLgKL1HPW6NPrKUZFeQZY",
       "date": "2026-07-02",
