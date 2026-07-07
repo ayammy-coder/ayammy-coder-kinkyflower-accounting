@@ -1,7 +1,62 @@
 {
-  "updated_at": "2026-07-07T03:09:14.954971+09:00",
-  "count": 1587,
+  "updated_at": "2026-07-08T02:56:32.372506+09:00",
+  "count": 1584,
   "transactions": [
+    {
+      "squareId": "JICyzJYZe9SOGiWyOAQwwSpS6fXZY",
+      "date": "2026-07-07",
+      "amount": 500,
+      "category": "売上",
+      "sq_category": "coffee",
+      "sq_breakdown": {
+        "flower": 0,
+        "coffee": 500,
+        "other": 0
+      },
+      "payment_method": "cash",
+      "items": [
+        "TODAY'S COFFEE"
+      ],
+      "description": "TODAY'S COFFEE",
+      "source": "Square"
+    },
+    {
+      "squareId": "JoI7i5yDzDMKem06rey1r3xKhpfZY",
+      "date": "2026-07-07",
+      "amount": 4000,
+      "category": "売上",
+      "sq_category": "flower",
+      "sq_breakdown": {
+        "flower": 4000,
+        "coffee": 0,
+        "other": 0
+      },
+      "payment_method": "other",
+      "items": [
+        "お花"
+      ],
+      "description": "お花",
+      "source": "Square"
+    },
+    {
+      "squareId": "50Q09GW0IPOmNDyeNU8bOFspLgMZY",
+      "date": "2026-07-07",
+      "amount": 1700,
+      "category": "売上",
+      "sq_category": "coffee",
+      "sq_breakdown": {
+        "flower": 0,
+        "coffee": 1700,
+        "other": 0
+      },
+      "payment_method": "cash",
+      "items": [
+        "HAND DRIP COFFEE",
+        "HAND DRIP COFFEE"
+      ],
+      "description": "HAND DRIP COFFEE、HAND DRIP COFFEE",
+      "source": "Square"
+    },
     {
       "squareId": "Pf48DyYDFtR9FZPbHi94eKonRZZZY",
       "date": "2026-07-05",
@@ -28666,114 +28721,6 @@
         "お花"
       ],
       "description": "お花",
-      "source": "Square"
-    },
-    {
-      "squareId": "523DD4X2ECxL088Pn8Huucrkrt7YY",
-      "date": "2026-01-08",
-      "amount": 2000,
-      "category": "売上",
-      "sq_category": "flower",
-      "sq_breakdown": {
-        "flower": 2000,
-        "coffee": 0,
-        "other": 0
-      },
-      "payment_method": "cash",
-      "items": [
-        "お花"
-      ],
-      "description": "お花",
-      "source": "Square"
-    },
-    {
-      "squareId": "zdonK8nfFG4JGNRveeRHIJw19kZZY",
-      "date": "2026-01-08",
-      "amount": 2750,
-      "category": "売上",
-      "sq_category": "other",
-      "sq_breakdown": {
-        "flower": 0,
-        "coffee": 0,
-        "other": 2750
-      },
-      "payment_method": "cash",
-      "items": [
-        "観葉植物"
-      ],
-      "description": "観葉植物",
-      "source": "Square"
-    },
-    {
-      "squareId": "Dp4O6EmKi3QYcPCCXsP4UUhLLVXZY",
-      "date": "2026-01-08",
-      "amount": 100,
-      "category": "売上",
-      "sq_category": "coffee",
-      "sq_breakdown": {
-        "flower": 0,
-        "coffee": 100,
-        "other": 0
-      },
-      "payment_method": "cash",
-      "items": [
-        "STAFF COFFEE"
-      ],
-      "description": "STAFF COFFEE",
-      "source": "Square"
-    },
-    {
-      "squareId": "bVsyFvdyrfcAt1FQKG9lw4SoCSBZY",
-      "date": "2026-01-08",
-      "amount": 330,
-      "category": "売上",
-      "sq_category": "flower",
-      "sq_breakdown": {
-        "flower": 330,
-        "coffee": 0,
-        "other": 0
-      },
-      "payment_method": "cash",
-      "items": [
-        "お花"
-      ],
-      "description": "お花",
-      "source": "Square"
-    },
-    {
-      "squareId": "LX5UodjlqUNIFJ0bTV6uJo6QLZNZY",
-      "date": "2026-01-08",
-      "amount": 500,
-      "category": "売上",
-      "sq_category": "coffee",
-      "sq_breakdown": {
-        "flower": 0,
-        "coffee": 500,
-        "other": 0
-      },
-      "payment_method": "cash",
-      "items": [
-        "TODAY'S COFFEE"
-      ],
-      "description": "TODAY'S COFFEE",
-      "source": "Square"
-    },
-    {
-      "squareId": "zzTVfLRW2CkKBYM2q0dXUfywsVJZY",
-      "date": "2026-01-08",
-      "amount": 200,
-      "category": "売上",
-      "sq_category": "coffee",
-      "sq_breakdown": {
-        "flower": 0,
-        "coffee": 200,
-        "other": 0
-      },
-      "payment_method": "cash",
-      "items": [
-        "STAFF COFFEE"
-      ],
-      "description": "STAFF COFFEE",
       "source": "Square"
     }
   ]
