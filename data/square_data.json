@@ -1,7 +1,79 @@
 {
-  "updated_at": "2026-07-28T02:39:45.982622+09:00",
-  "count": 1533,
+  "updated_at": "2026-07-29T02:23:35.282688+09:00",
+  "count": 1527,
   "transactions": [
+    {
+      "squareId": "z90zbHCjDlqUfoFZyueu2YR0xcGZY",
+      "date": "2026-07-28",
+      "amount": 500,
+      "category": "売上",
+      "sq_category": "coffee",
+      "sq_breakdown": {
+        "flower": 0,
+        "coffee": 500,
+        "other": 0
+      },
+      "payment_method": "cash",
+      "items": [
+        "TODAY'S COFFEE"
+      ],
+      "description": "TODAY'S COFFEE",
+      "source": "Square"
+    },
+    {
+      "squareId": "l8X1EdwKFvtg9C04mmCB4cCmyq7YY",
+      "date": "2026-07-28",
+      "amount": 200,
+      "category": "売上",
+      "sq_category": "coffee",
+      "sq_breakdown": {
+        "flower": 0,
+        "coffee": 200,
+        "other": 0
+      },
+      "payment_method": "cash",
+      "items": [
+        "STAFF COFFEE"
+      ],
+      "description": "STAFF COFFEE",
+      "source": "Square"
+    },
+    {
+      "squareId": "3rqJab7kHnjydJ4uYre5U8NXZSdZY",
+      "date": "2026-07-28",
+      "amount": 16500,
+      "category": "売上",
+      "sq_category": "flower",
+      "sq_breakdown": {
+        "flower": 16500,
+        "coffee": 0,
+        "other": 0
+      },
+      "payment_method": "cash",
+      "items": [
+        "お花"
+      ],
+      "description": "お花",
+      "source": "Square"
+    },
+    {
+      "squareId": "x2pXbj6GGId13bDNCh2HJjTs9NLZY",
+      "date": "2026-07-28",
+      "amount": 10000,
+      "category": "売上",
+      "sq_category": "other",
+      "sq_breakdown": {
+        "flower": 0,
+        "coffee": 0,
+        "other": 10000
+      },
+      "payment_method": "cash",
+      "items": [
+        "観葉植物"
+      ],
+      "description": "観葉植物",
+      "source": "Square"
+    },
     {
       "squareId": "pMihLcFkGHIh7sX978HjlwhI1t5YY",
       "date": "2026-07-27",
@@ -27616,187 +27688,6 @@
         "お花"
       ],
       "description": "お花",
-      "source": "Square"
-    },
-    {
-      "squareId": "D5QorweO0VLhJuPvVioI9ABQZnZZY",
-      "date": "2026-01-29",
-      "amount": 7620,
-      "category": "売上",
-      "sq_category": "other",
-      "sq_breakdown": {
-        "flower": 3300,
-        "coffee": 0,
-        "other": 4320
-      },
-      "payment_method": "other",
-      "items": [
-        "クッキー缶",
-        "切花"
-      ],
-      "description": "クッキー缶、切花",
-      "source": "Square"
-    },
-    {
-      "squareId": "nlB4KUeWPqhmV0QIGkXt7mP1t9RZY",
-      "date": "2026-01-29",
-      "amount": 4950,
-      "category": "売上",
-      "sq_category": "flower",
-      "sq_breakdown": {
-        "flower": 4950,
-        "coffee": 0,
-        "other": 0
-      },
-      "payment_method": "cash",
-      "items": [
-        "お花"
-      ],
-      "description": "お花",
-      "source": "Square"
-    },
-    {
-      "squareId": "bLjum2ENRoyvy9OImuONOU68UdPZY",
-      "date": "2026-01-29",
-      "amount": 1870,
-      "category": "売上",
-      "sq_category": "flower",
-      "sq_breakdown": {
-        "flower": 1870,
-        "coffee": 0,
-        "other": 0
-      },
-      "payment_method": "cash",
-      "items": [
-        "お花"
-      ],
-      "description": "お花",
-      "source": "Square"
-    },
-    {
-      "squareId": "BMwnvFpskB7mUTNJUGkmq3heVEVZY",
-      "date": "2026-01-29",
-      "amount": 500,
-      "category": "売上",
-      "sq_category": "other",
-      "sq_breakdown": {
-        "flower": 0,
-        "coffee": 0,
-        "other": 500
-      },
-      "payment_method": "other",
-      "items": [
-        "ジンジャーエール"
-      ],
-      "description": "ジンジャーエール",
-      "source": "Square"
-    },
-    {
-      "squareId": "FUTP5sN04z6wP5QJBXK7C1HRf7BZY",
-      "date": "2026-01-29",
-      "amount": 6600,
-      "category": "売上",
-      "sq_category": "flower",
-      "sq_breakdown": {
-        "flower": 6600,
-        "coffee": 0,
-        "other": 0
-      },
-      "payment_method": "cash",
-      "items": [
-        "お花"
-      ],
-      "description": "お花",
-      "source": "Square"
-    },
-    {
-      "squareId": "t2qpeYETYsNcFLp2AwK5man8ikAZY",
-      "date": "2026-01-29",
-      "amount": 1000,
-      "category": "売上",
-      "sq_category": "coffee",
-      "sq_breakdown": {
-        "flower": 0,
-        "coffee": 1000,
-        "other": 0
-      },
-      "payment_method": "cash",
-      "items": [
-        "TODAY'S COFFEE"
-      ],
-      "description": "TODAY'S COFFEE",
-      "source": "Square"
-    },
-    {
-      "squareId": "jnpHcOqrzbiuaJWvalfT1nzheeRZY",
-      "date": "2026-01-29",
-      "amount": 3080,
-      "category": "売上",
-      "sq_category": "flower",
-      "sq_breakdown": {
-        "flower": 3080,
-        "coffee": 0,
-        "other": 0
-      },
-      "payment_method": "cash",
-      "items": [
-        "お花"
-      ],
-      "description": "お花",
-      "source": "Square"
-    },
-    {
-      "squareId": "LlmhV3il20aPl17saHleIPjRBD6YY",
-      "date": "2026-01-29",
-      "amount": 700,
-      "category": "売上",
-      "sq_category": "other",
-      "sq_breakdown": {
-        "flower": 0,
-        "coffee": 0,
-        "other": 700
-      },
-      "payment_method": "cash",
-      "items": [
-        "赤酒チャイ"
-      ],
-      "description": "赤酒チャイ",
-      "source": "Square"
-    },
-    {
-      "squareId": "JcUWZcwfz5QSifxjK5QR0OarzNZZY",
-      "date": "2026-01-29",
-      "amount": 770,
-      "category": "売上",
-      "sq_category": "flower",
-      "sq_breakdown": {
-        "flower": 770,
-        "coffee": 0,
-        "other": 0
-      },
-      "payment_method": "cash",
-      "items": [
-        "お花"
-      ],
-      "description": "お花",
-      "source": "Square"
-    },
-    {
-      "squareId": "DDvhnxzPGO9VsO7wixrYFuQ4r7cZY",
-      "date": "2026-01-29",
-      "amount": 1210,
-      "category": "売上",
-      "sq_category": "other",
-      "sq_breakdown": {
-        "flower": 0,
-        "coffee": 0,
-        "other": 1210
-      },
-      "payment_method": "other",
-      "items": [
-        "観葉植物"
-      ],
-      "description": "観葉植物",
       "source": "Square"
     }
   ]
