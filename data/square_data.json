@@ -1,7 +1,25 @@
 {
-  "updated_at": "2026-08-11T01:51:02.048761+09:00",
-  "count": 1458,
+  "updated_at": "2026-08-12T01:54:43.679151+09:00",
+  "count": 1451,
   "transactions": [
+    {
+      "squareId": "rNwIDMk9NpEGGSP9DwyjHVhEWMeZY",
+      "date": "2026-08-11",
+      "amount": 4400,
+      "category": "売上",
+      "sq_category": "flower",
+      "sq_breakdown": {
+        "flower": 4400,
+        "coffee": 0,
+        "other": 0
+      },
+      "payment_method": "cash",
+      "items": [
+        "お花"
+      ],
+      "description": "お花",
+      "source": "Square"
+    },
     {
       "squareId": "jleQd7qeNHx8LDqFGsNS7eijIMdZY",
       "date": "2026-08-10",
@@ -26294,150 +26312,6 @@
         "お花"
       ],
       "description": "お花",
-      "source": "Square"
-    },
-    {
-      "squareId": "fDUpCgk4uJTcn28xGH3tO9TODkMZY",
-      "date": "2026-02-12",
-      "amount": 900,
-      "category": "売上",
-      "sq_category": "coffee",
-      "sq_breakdown": {
-        "flower": 0,
-        "coffee": 900,
-        "other": 0
-      },
-      "payment_method": "cash",
-      "items": [
-        "HAND DRIP COFFEE"
-      ],
-      "description": "HAND DRIP COFFEE",
-      "source": "Square"
-    },
-    {
-      "squareId": "XvwBPnppXMD5RonlpSMZC2XmJoQZY",
-      "date": "2026-02-12",
-      "amount": 330,
-      "category": "売上",
-      "sq_category": "flower",
-      "sq_breakdown": {
-        "flower": 330,
-        "coffee": 0,
-        "other": 0
-      },
-      "payment_method": "cash",
-      "items": [
-        "お花"
-      ],
-      "description": "お花",
-      "source": "Square"
-    },
-    {
-      "squareId": "fnUuVIjdP2J4mfJAbTfUZyyfKvcZY",
-      "date": "2026-02-12",
-      "amount": 200,
-      "category": "売上",
-      "sq_category": "coffee",
-      "sq_breakdown": {
-        "flower": 0,
-        "coffee": 200,
-        "other": 0
-      },
-      "payment_method": "cash",
-      "items": [
-        "STAFF COFFEE"
-      ],
-      "description": "STAFF COFFEE",
-      "source": "Square"
-    },
-    {
-      "squareId": "TXDKO8920hqQ5gSqWYdRVijalX9YY",
-      "date": "2026-02-12",
-      "amount": 660,
-      "category": "売上",
-      "sq_category": "flower",
-      "sq_breakdown": {
-        "flower": 660,
-        "coffee": 0,
-        "other": 0
-      },
-      "payment_method": "cash",
-      "items": [
-        "お花"
-      ],
-      "description": "お花",
-      "source": "Square"
-    },
-    {
-      "squareId": "9wXhbZvFNwmvauxQ7Azcinukb1CZY",
-      "date": "2026-02-12",
-      "amount": 660,
-      "category": "売上",
-      "sq_category": "flower",
-      "sq_breakdown": {
-        "flower": 660,
-        "coffee": 0,
-        "other": 0
-      },
-      "payment_method": "cash",
-      "items": [
-        "お花"
-      ],
-      "description": "お花",
-      "source": "Square"
-    },
-    {
-      "squareId": "TF2OxOyn2jW068S9aSbWPIvs7IOZY",
-      "date": "2026-02-12",
-      "amount": 500,
-      "category": "売上",
-      "sq_category": "coffee",
-      "sq_breakdown": {
-        "flower": 0,
-        "coffee": 500,
-        "other": 0
-      },
-      "payment_method": "cash",
-      "items": [
-        "TODAY'S COFFEE"
-      ],
-      "description": "TODAY'S COFFEE",
-      "source": "Square"
-    },
-    {
-      "squareId": "LPVYehG9dY2ts9fH0RsyBdDym9OZY",
-      "date": "2026-02-12",
-      "amount": 990,
-      "category": "売上",
-      "sq_category": "flower",
-      "sq_breakdown": {
-        "flower": 990,
-        "coffee": 0,
-        "other": 0
-      },
-      "payment_method": "other",
-      "items": [
-        "お花"
-      ],
-      "description": "お花",
-      "source": "Square"
-    },
-    {
-      "squareId": "pKFfJwnKvmZSTfHar3vOhGBbdGQZY",
-      "date": "2026-02-12",
-      "amount": 330,
-      "category": "売上",
-      "sq_category": "other",
-      "sq_breakdown": {
-        "flower": 0,
-        "coffee": 0,
-        "other": 330
-      },
-      "payment_method": "cash",
-      "items": [
-        "観葉植物"
-      ],
-      "description": "観葉植物",
       "source": "Square"
     }
   ]
