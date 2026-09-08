@@ -1,7 +1,25 @@
 {
-  "updated_at": "2026-09-08T04:34:24.838606+09:00",
-  "count": 1306,
+  "updated_at": "2026-09-09T04:14:26.178263+09:00",
+  "count": 1299,
   "transactions": [
+    {
+      "squareId": "RC1gKIMuvDw1u1kXEPS63zTK4lfZY",
+      "date": "2026-09-08",
+      "amount": 1650,
+      "category": "売上",
+      "sq_category": "other",
+      "sq_breakdown": {
+        "flower": 0,
+        "coffee": 0,
+        "other": 1650
+      },
+      "payment_method": "cash",
+      "items": [
+        "本日のブーケ"
+      ],
+      "description": "本日のブーケ",
+      "source": "Square"
+    },
     {
       "squareId": "37OfCVNDM2WKiMApWtBryphn837YY",
       "date": "2026-09-07",
@@ -23550,150 +23568,6 @@
       "sq_category": "flower",
       "sq_breakdown": {
         "flower": 3000,
-        "coffee": 0,
-        "other": 0
-      },
-      "payment_method": "cash",
-      "items": [
-        "お花"
-      ],
-      "description": "お花",
-      "source": "Square"
-    },
-    {
-      "squareId": "ZMQCH9AiBzWjJlR50Rveg9455nBZY",
-      "date": "2026-03-12",
-      "amount": 2750,
-      "category": "売上",
-      "sq_category": "flower",
-      "sq_breakdown": {
-        "flower": 2750,
-        "coffee": 0,
-        "other": 0
-      },
-      "payment_method": "other",
-      "items": [
-        "お花"
-      ],
-      "description": "お花",
-      "source": "Square"
-    },
-    {
-      "squareId": "RG1RhrWiB3kc2SZlrRr3PJzCjfTZY",
-      "date": "2026-03-12",
-      "amount": 1980,
-      "category": "売上",
-      "sq_category": "flower",
-      "sq_breakdown": {
-        "flower": 1980,
-        "coffee": 0,
-        "other": 0
-      },
-      "payment_method": "cash",
-      "items": [
-        "お花"
-      ],
-      "description": "お花",
-      "source": "Square"
-    },
-    {
-      "squareId": "RCLFH4k8rCoIngw8pb2FsDLYYJGZY",
-      "date": "2026-03-12",
-      "amount": 8500,
-      "category": "売上",
-      "sq_category": "flower",
-      "sq_breakdown": {
-        "flower": 8500,
-        "coffee": 0,
-        "other": 0
-      },
-      "payment_method": "cash",
-      "items": [
-        "お花"
-      ],
-      "description": "お花",
-      "source": "Square"
-    },
-    {
-      "squareId": "5CLyt1qQrQYTRPwhdYR1twwHyScZY",
-      "date": "2026-03-12",
-      "amount": 660,
-      "category": "売上",
-      "sq_category": "flower",
-      "sq_breakdown": {
-        "flower": 660,
-        "coffee": 0,
-        "other": 0
-      },
-      "payment_method": "cash",
-      "items": [
-        "お花"
-      ],
-      "description": "お花",
-      "source": "Square"
-    },
-    {
-      "squareId": "10npM32JH9XImx61HkXLjoUgyEGZY",
-      "date": "2026-03-12",
-      "amount": 16000,
-      "category": "売上",
-      "sq_category": "flower",
-      "sq_breakdown": {
-        "flower": 16000,
-        "coffee": 0,
-        "other": 0
-      },
-      "payment_method": "cash",
-      "items": [
-        "お花"
-      ],
-      "description": "お花",
-      "source": "Square"
-    },
-    {
-      "squareId": "bVKjqPwgEuZIHJGzgIOgybSyJ3IZY",
-      "date": "2026-03-12",
-      "amount": 1650,
-      "category": "売上",
-      "sq_category": "flower",
-      "sq_breakdown": {
-        "flower": 1650,
-        "coffee": 0,
-        "other": 0
-      },
-      "payment_method": "cash",
-      "items": [
-        "お花"
-      ],
-      "description": "お花",
-      "source": "Square"
-    },
-    {
-      "squareId": "bl8USUwkUJNc04YJZNaZoRgL1DDZY",
-      "date": "2026-03-12",
-      "amount": 1100,
-      "category": "売上",
-      "sq_category": "flower",
-      "sq_breakdown": {
-        "flower": 1100,
-        "coffee": 0,
-        "other": 0
-      },
-      "payment_method": "cash",
-      "items": [
-        "お花"
-      ],
-      "description": "お花",
-      "source": "Square"
-    },
-    {
-      "squareId": "nJd9sDlhWOHyXsQLbMqaeTNxNYEZY",
-      "date": "2026-03-12",
-      "amount": 2200,
-      "category": "売上",
-      "sq_category": "flower",
-      "sq_breakdown": {
-        "flower": 2200,
         "coffee": 0,
         "other": 0
       },
