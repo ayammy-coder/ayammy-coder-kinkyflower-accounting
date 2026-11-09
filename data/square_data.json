@@ -1,7 +1,62 @@
 {
-  "updated_at": "2026-11-09T05:08:40.329412+09:00",
-  "count": 1284,
+  "updated_at": "2026-11-10T08:56:41.836483+09:00",
+  "count": 1281,
   "transactions": [
+    {
+      "squareId": "Ssucdz0MhKNwdV7JakUQocJMRPIZY",
+      "date": "2026-11-09",
+      "amount": 11000,
+      "category": "売上",
+      "sq_category": "flower",
+      "sq_breakdown": {
+        "flower": 11000,
+        "coffee": 0,
+        "other": 0
+      },
+      "payment_method": "other",
+      "items": [
+        "お花"
+      ],
+      "description": "お花",
+      "source": "Square"
+    },
+    {
+      "squareId": "4RtJIO8B4ynaII7diETiJRiIv8KZY",
+      "date": "2026-11-09",
+      "amount": 1060,
+      "category": "売上",
+      "sq_category": "flower",
+      "sq_breakdown": {
+        "flower": 660,
+        "coffee": 0,
+        "other": 400
+      },
+      "payment_method": "other",
+      "items": [
+        "お花",
+        "チーズケーキ"
+      ],
+      "description": "お花、チーズケーキ",
+      "source": "Square"
+    },
+    {
+      "squareId": "SAkKRXqWuZy9eFoU5uqcT5ixbKRZY",
+      "date": "2026-11-09",
+      "amount": 100,
+      "category": "売上",
+      "sq_category": "coffee",
+      "sq_breakdown": {
+        "flower": 0,
+        "coffee": 100,
+        "other": 0
+      },
+      "payment_method": "other",
+      "items": [
+        "STAFF COFFEE"
+      ],
+      "description": "STAFF COFFEE",
+      "source": "Square"
+    },
     {
       "squareId": "OGQwwgt5sR0A3PrKsTQB27RDYbOZY",
       "date": "2026-11-08",
@@ -23234,115 +23289,6 @@
         "お花"
       ],
       "description": "お花",
-      "source": "Square"
-    },
-    {
-      "squareId": "fTyKFOlQ5j9osndwCVYc7zFiHIWZY",
-      "date": "2026-05-13",
-      "amount": 1760,
-      "category": "売上",
-      "sq_category": "flower",
-      "sq_breakdown": {
-        "flower": 1760,
-        "coffee": 0,
-        "other": 0
-      },
-      "payment_method": "cash",
-      "items": [
-        "お花"
-      ],
-      "description": "お花",
-      "source": "Square"
-    },
-    {
-      "squareId": "tGqrNWCNISHzksxnt4vCN8uhWqXZY",
-      "date": "2026-05-13",
-      "amount": 1870,
-      "category": "売上",
-      "sq_category": "flower",
-      "sq_breakdown": {
-        "flower": 1870,
-        "coffee": 0,
-        "other": 0
-      },
-      "payment_method": "cash",
-      "items": [
-        "お花",
-        "お花"
-      ],
-      "description": "お花、お花",
-      "source": "Square"
-    },
-    {
-      "squareId": "FUJMqEB4aYeKmipDuSuAwqLab3RZY",
-      "date": "2026-05-13",
-      "amount": 2640,
-      "category": "売上",
-      "sq_category": "flower",
-      "sq_breakdown": {
-        "flower": 2640,
-        "coffee": 0,
-        "other": 0
-      },
-      "payment_method": "other",
-      "items": [
-        "お花"
-      ],
-      "description": "お花",
-      "source": "Square"
-    },
-    {
-      "squareId": "50CzEs40HiVKTmoPcxZ1p7AGTIZZY",
-      "date": "2026-05-13",
-      "amount": 500,
-      "category": "売上",
-      "sq_category": "other",
-      "sq_breakdown": {
-        "flower": 0,
-        "coffee": 0,
-        "other": 500
-      },
-      "payment_method": "cash",
-      "items": [
-        "コーラ"
-      ],
-      "description": "コーラ",
-      "source": "Square"
-    },
-    {
-      "squareId": "Xh1JU7yYX0xY1DdhAlE4hmNtS4UZY",
-      "date": "2026-05-13",
-      "amount": 3300,
-      "category": "売上",
-      "sq_category": "flower",
-      "sq_breakdown": {
-        "flower": 3300,
-        "coffee": 0,
-        "other": 0
-      },
-      "payment_method": "cash",
-      "items": [
-        "お花"
-      ],
-      "description": "お花",
-      "source": "Square"
-    },
-    {
-      "squareId": "fvgmtZARcwRdV52k1riA9b4CLiCZY",
-      "date": "2026-05-13",
-      "amount": 500,
-      "category": "売上",
-      "sq_category": "coffee",
-      "sq_breakdown": {
-        "flower": 0,
-        "coffee": 500,
-        "other": 0
-      },
-      "payment_method": "cash",
-      "items": [
-        "TODAY'S COFFEE"
-      ],
-      "description": "TODAY'S COFFEE",
       "source": "Square"
     }
   ]
